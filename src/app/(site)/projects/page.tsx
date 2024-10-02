@@ -5,9 +5,9 @@ export default function ProjectsPage() {
 
       <h1>Projects</h1>
       <p className="text-[18px] leading-[1.75rem]">
-        Over the years, I've worked on a range of projects, some as hobbies, others as proofs of
-        concept, and a few to address challenges I encountered myself. Here's a selection of the
-        work I've done
+        Over the years, I&#39;ve worked on a range of projects, some as hobbies, others as proofs of
+        concept, and a few to address challenges I encountered myself. Here&#39;s a selection of the
+        work I&#39;ve done
       </p>
 
       <div className="flex flex-col gap-4">
