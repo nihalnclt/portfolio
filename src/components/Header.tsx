@@ -1,34 +1,27 @@
-import { navLinks } from "@/data/navLinks";
-import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import NavLinks from "@/components/NavLinks";
+import { siteConfig } from "@/data/site";
 
 export default function Header() {
   return (
-    <div className="container">
-      <div className="py-6 flex items-center justify-between">
-        <Link href={`/`}>
-          <div className="size-7">
-            <Image
-              src="/images/logo.png"
-              alt="Nihal N"
-              width={100}
-              height={100}
-              className="w-full h-full object-cover"
-            />
-          </div>
+    <header className="container">
+      <nav className="flex items-center justify-between gap-4 py-8 pr-10 md:pr-0">
+        <Link
+          href="/"
+          aria-label={`${siteConfig.name} - home`}
+          className="group flex items-center gap-2.5 text-heading"
+        >
+          <span
+            className="relative inline-flex size-2 shrink-0 rounded-full bg-emerald-500/80"
+            aria-hidden="true"
+          >
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/50"></span>
+          </span>
+          <span className="font-medium tracking-tight">{siteConfig.name}</span>
         </Link>
 
-        <div className="flex items-center gap-3">
-          {navLinks.map(({ name, link }, index) => {
-            return (
-              <Link href={link} key={index}>
-                <span>{name}</span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+        <NavLinks />
+      </nav>
+    </header>
   );
 }

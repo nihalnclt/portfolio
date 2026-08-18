@@ -1,25 +1,16 @@
-import React from "react";
+import { siteConfig } from "@/data/site";
 
 export default function Footer() {
   return (
-    <div className="container">
-      <div className="py-6 flex items-center gap-4">
-        <span>@ {new Date().getFullYear()}</span>
-        <div className="flex items-center gap-4">
-          <a href="">
-            <span>LinkedIn</span>
-          </a>
-          <a href="">
-            <span>Twitter</span>
-          </a>
-          <a href="">
-            <span>Github</span>
-          </a>
-          <a href="">
-            <span>Email</span>
-          </a>
-        </div>
+    <footer className="container">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line py-8 text-sm text-faint">
+        <p>
+          &copy; {new Date().getFullYear()} {siteConfig.name}
+        </p>
+        <a href="/rss.xml" className="transition-colors hover:text-heading">
+          RSS
+        </a>
       </div>
-    </div>
+    </footer>
   );
 }

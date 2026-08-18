@@ -1,15 +1,15 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
-export default function layout({
+export default function SiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <Header />
-      <div className="flex-1 mt-8">{children}</div>
+      <main className="mt-6 flex-1">{children}</main>
       <Footer />
     </div>
   );

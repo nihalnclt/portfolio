@@ -2,14 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Palette from kulpinski.dev: neutral grayscale + blue primary */
 :root {
-  --background: #18181b;
-  --foreground: #a3a3a3;
+  color-scheme: light;
+  --background: hsl(0 0% 100%);
+  --surface: hsl(0 0% 98%);
+  --line: hsl(0 0% 90%);
+  --line-strong: hsl(0 0% 83%);
+  --heading: hsl(0 0% 7%);
+  --foreground: hsl(0 0% 35%);
+  --faint: hsl(0 0% 55%);
+  --primary: hsl(209 100% 51%);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: hsl(0 0% 7%);
+  --surface: hsl(0 0% 10%);
+  --line: hsl(0 0% 16%);
+  --line-strong: hsl(0 0% 24%);
+  --heading: hsl(0 0% 92%);
+  --foreground: hsl(0 0% 68%);
+  --faint: hsl(0 0% 48%);
+  --primary: hsl(209 100% 51%);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Inter OpenType features, matching kulpinski.dev */
+  font-feature-settings:
+    "liga" 1, "calt" 1, "case" 1, "ss01" 1, "ss03" 1, "ss04" 1, "ss08" 1, "cv01" 1, "cv02" 1,
+    "cv03" 1, "cv04" 1, "cv09" 1, "cv11" 1, "tnum" 1, "zero" 1;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+::selection {
+  background: var(--heading);
+  color: var(--background);
 }
 
 @layer utilities {
@@ -18,9 +57,56 @@ body {
   }
 }
 
+/* Post body code styling (kulpinski.dev-style):
+   tinted code blocks, pill-shaped inline code, no backtick pseudo-content */
+.prose pre {
+  background: color-mix(in srgb, var(--heading) 5%, transparent);
+  color: var(--heading);
+}
+
+.prose code:not(pre code) {
+  background: color-mix(in srgb, var(--heading) 10%, transparent);
+  color: var(--heading);
+  border-radius: 0.25rem;
+  padding: 0.166em 0.33em;
+  font-weight: 400;
+}
+
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
 .container {
   width: 100%;
-  max-width: 680px;
+  max-width: 620px;
   margin: 0 auto;
-  padding: 0px 20px;
+  /* left/right only - top/bottom padding comes from per-page Tailwind utility
+     classes on the same element, e.g. "container pb-24 pt-8" */
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s cubic-bezier(0.21, 0.47, 0.32, 0.98) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-fade-up {
+    animation: none;
+  }
 }
