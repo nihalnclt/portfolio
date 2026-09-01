@@ -1,15 +1,11 @@
-version: '3'
-
 services:
   portfolio:
-    image: node:18-alpine
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
+    build: .
+    container_name: portfolio
+    restart: unless-stopped
+    networks:
+      - proxy
 
-volumes:
-  node_modules:
+networks:
+  proxy:
+    external: true
