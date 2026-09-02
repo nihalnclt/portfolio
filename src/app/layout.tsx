@@ -38,6 +38,8 @@ export const metadata: Metadata = {
 
 const themeInit = `(function(){try{var t=localStorage.getItem("theme");var d=t?t==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;if(d)document.documentElement.classList.add("dark");}catch(e){}})();`;
 
+const plausibleInit = `window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -53,6 +55,8 @@ export default function RootLayout({
           data-domain="nihaln.com"
           src="https://piqo.app/piqo.js"
         />
+        <script async src="https://plausible.io/js/pa-MbKxksMbckp0aYOErCw9J.js" />
+        <script dangerouslySetInnerHTML={{ __html: plausibleInit }} />
       </head>
       <body className="font-sans antialiased">
         <ThemeToggle />
