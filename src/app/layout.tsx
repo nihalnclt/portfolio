@@ -47,6 +47,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script
+          defer
+          data-site="z0lkfvko"
+          data-domain="nihaln.com"
+          src="https://piqo.app/piqo.js"
+        />
       </head>
       <body className="font-sans antialiased">
         <ThemeToggle />
