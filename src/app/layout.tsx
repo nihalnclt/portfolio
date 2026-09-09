@@ -57,6 +57,12 @@ export default function RootLayout({
         />
         <script async src="https://plausible.io/js/pa-MbKxksMbckp0aYOErCw9J.js" />
         <script dangerouslySetInnerHTML={{ __html: plausibleInit }} />
+        <script
+          defer
+          src="https://api.webyz.io/js/script.js"
+          data-site-id="fd595029-9a69-4d43-85e4-ca0169a5a180"
+          data-endpoint="https://api.webyz.io/api/v1/track"
+        />
       </head>
       <body className="font-sans antialiased">
         <ThemeToggle />
