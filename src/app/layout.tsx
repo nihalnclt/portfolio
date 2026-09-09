@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import ThemeToggle from "@/components/ThemeToggle";
 import { siteConfig } from "@/data/site";
 import "./globals.css";
 
@@ -65,7 +64,6 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <ThemeToggle />
         {children}
       </body>
     </html>

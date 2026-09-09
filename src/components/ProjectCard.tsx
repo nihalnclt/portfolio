@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ProjectType } from "@/types/project";
 import { ArrowUpRight } from "@/components/icons";
 
@@ -14,7 +15,17 @@ export default function ProjectCard({ project }: { project: ProjectType }) {
   const card = (
     <div className="group flex h-full flex-col rounded-xl border border-line bg-surface p-4 transition-colors hover:border-line-strong">
       <div className="flex items-center gap-2">
-        {project.icon && <span className="text-base leading-none">{project.icon}</span>}
+        {project.iconSrc ? (
+          <Image
+            src={project.iconSrc}
+            alt=""
+            width={16}
+            height={16}
+            className="h-4 w-4 shrink-0 rounded-sm object-contain"
+          />
+        ) : (
+          project.icon && <span className="text-base leading-none">{project.icon}</span>
+        )}
         <h3 className="font-medium text-heading">{project.name}</h3>
         {project.badge && (
           <span

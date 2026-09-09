@@ -5,11 +5,11 @@ export const projects: ProjectType[] = [
   {
     id: 1,
     name: "Webyz.io",
-    icon: "📊",
+    iconSrc: "/images/projects/webyz.png",
     description:
       "Privacy-focused web analytics platform providing real-time insights into website traffic and user behavior.",
-    // TODO: add the URL once webyz.io is live
-    badge: { label: "Building", tone: "amber" },
+    url: "https://webyz.io",
+    badge: { label: "Live", tone: "emerald" },
     featured: true,
   },
   {

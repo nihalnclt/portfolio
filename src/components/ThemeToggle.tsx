@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "@/components/icons";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className = "" }: { className?: string }) {
   // null until mounted so the server render carries no theme assumption
   const [isDark, setIsDark] = useState<boolean | null>(null);
 
@@ -23,7 +23,7 @@ export default function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      className="fixed right-4 top-4 z-50 grid h-9 w-9 place-items-center rounded-full border border-line bg-surface/70 text-faint backdrop-blur transition-colors hover:border-line-strong hover:text-heading"
+      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line bg-surface text-faint transition-colors hover:border-line-strong hover:text-heading ${className}`}
     >
       {isDark !== null && (isDark ? <Sun /> : <Moon />)}
     </button>
