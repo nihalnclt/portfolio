@@ -87,4 +87,4 @@ in the app if the change is significant.
 
 ## Contact
 
-[CONTACT EMAIL]
+[nihalnclt@gmail.com](mailto:nihalnclt@gmail.com)

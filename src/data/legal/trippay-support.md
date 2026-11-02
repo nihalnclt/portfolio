@@ -7,7 +7,7 @@ Trippay is a group trip expense splitter for iPhone and Android, listed on the A
 
 ## Contact
 
-Email [CONTACT EMAIL] with your question. Include the email address on your account and, for purchase issues, the trip name. I usually reply within a few days.
+Email [nihalnclt@gmail.com](mailto:nihalnclt@gmail.com) with your question. Include the email address on your account and, for purchase issues, the trip name. I usually reply within a few days.
 
 ## Deleting your account
 
