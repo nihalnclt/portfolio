@@ -2,6 +2,7 @@ import Link from "next/link";
 import MobileNav from "@/components/MobileNav";
 import NavLinks from "@/components/NavLinks";
 import ThemeToggle from "@/components/ThemeToggle";
+import Wordmark from "@/components/Wordmark";
 import { siteConfig } from "@/data/site";
 
 export default function Header() {
@@ -13,15 +14,9 @@ export default function Header() {
         <Link
           href="/"
           aria-label={`${siteConfig.name} - home`}
-          className="group flex items-center gap-2.5 whitespace-nowrap text-heading"
+          className="flex items-center whitespace-nowrap text-heading"
         >
-          <span
-            className="relative inline-flex size-2 shrink-0 rounded-full bg-emerald-500/80"
-            aria-hidden="true"
-          >
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500/50"></span>
-          </span>
-          <span className="font-medium tracking-tight">{siteConfig.name}</span>
+          <Wordmark text={siteConfig.name.toLowerCase().replace(/\s+/g, "-")} />
         </Link>
 
         <div className="flex items-center gap-2 md:gap-4">

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Avatar from "@/components/Avatar";
 import DownloadCV from "@/components/DownloadCV";
 import NewsLetter from "@/components/NewsLetter";
 import PostRow from "@/components/PostRow";
@@ -18,16 +18,7 @@ export default function Home() {
     <div className="container flex flex-col gap-14 pb-24 pt-8">
       <div className="flex flex-col gap-8">
         <div className="animate-fade-up flex items-center gap-4">
-          <div className="size-12 shrink-0 overflow-hidden rounded-full">
-            <Image
-              src="/images/profile.png"
-              alt={siteConfig.name}
-              width={96}
-              height={96}
-              className="h-full w-full object-cover"
-              priority
-            />
-          </div>
+          <Avatar name={siteConfig.name} />
           <div className="min-w-0">
             <h1 className="text-lg font-semibold text-heading">{siteConfig.name}</h1>
             {/* Break at the separator on narrow screens instead of mid-phrase */}
