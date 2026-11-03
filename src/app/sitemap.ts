@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/trippay",
     "/trippay/privacy",
     "/trippay/support",
+    "/majlisunnoor/privacy",
   ].map((route) => ({
     url: `${siteConfig.siteUrl}${route}`,
     lastModified: new Date(),
