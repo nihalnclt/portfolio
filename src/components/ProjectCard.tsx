@@ -68,8 +68,15 @@ export default function ProjectCard({ project }: { project: ProjectType }) {
 
   if (!href) return card;
 
+  // Pages on this site open in the same tab; external links open a new one.
+  const isInternal = href.startsWith("/");
+
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="h-full">
+    <a
+      href={href}
+      className="h-full"
+      {...(isInternal ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+    >
       {card}
     </a>
   );

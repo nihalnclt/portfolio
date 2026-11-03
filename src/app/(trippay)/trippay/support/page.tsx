@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import LegalPage from "@/components/LegalPage";
+import TrippayDoc from "@/components/trippay/TrippayDoc";
 import { getLegalDoc } from "@/lib/legal";
 
 export const dynamic = "force-static";
@@ -17,5 +17,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TrippaySupportPage() {
   const doc = await getLegalDoc("trippay-support");
-  return <LegalPage doc={doc} />;
+  return <TrippayDoc doc={doc} />;
 }

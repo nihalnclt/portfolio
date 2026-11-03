@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/projects",
     "/posts",
     "/tools",
+    "/trippay",
     "/trippay/privacy",
     "/trippay/support",
   ].map((route) => ({

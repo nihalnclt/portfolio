@@ -23,4 +23,15 @@ export const projects: ProjectType[] = [
     tags: ["macOS"],
     featured: true,
   },
+  {
+    id: 3,
+    name: "Trippay",
+    iconSrc: "/images/projects/trippay.png",
+    description:
+      "Group trip expense splitter for iPhone and Android - add bills as you go, see who owes whom, and settle up in fewer payments.",
+    url: "/trippay",
+    badge: { label: "Building", tone: "amber" },
+    tags: ["Expo", "Fastify"],
+    featured: true,
+  },
 ];

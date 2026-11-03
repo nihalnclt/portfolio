@@ -130,3 +130,83 @@ body {
     animation: none;
   }
 }
+
+/* Trippay product pages: playful light palette with dark-mode equivalents */
+.trippay {
+  --tp-page: #ffffff;
+  --tp-ink: #15122e;
+  --tp-muted: #5e5a78;
+  --tp-line: #e7e5f0;
+  --tp-accent: #684cfb;
+  --tp-surface: #ffffff;
+  --tp-cloud: #f1f0f8;
+  --tp-navy: #15122e;
+  --tp-yellow-bg: #fff2d9;
+  --tp-yellow-ink: #8a5300;
+  --tp-yellow-mid: #ffd27a;
+  --tp-blue-bg: #dfe5ff;
+  --tp-blue-ink: #2638a8;
+  --tp-blue-mid: #8ea2ff;
+  --tp-pink-bg: #ffe3f2;
+  --tp-pink-ink: #b3167a;
+  --tp-pink-mid: #ff9bd0;
+  --tp-green-bg: #ddf5e5;
+  --tp-green-ink: #157240;
+  --tp-green-mid: #6fd49a;
+  --tp-peach-bg: #ffe8df;
+  --tp-peach-ink: #a1300f;
+  --tp-peach-mid: #ffb199;
+  background: var(--tp-page);
+  color: var(--tp-ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+.dark .trippay {
+  --tp-page: #0c0b14;
+  --tp-ink: #f3f1ff;
+  --tp-muted: #a9a5c4;
+  --tp-line: #26243a;
+  --tp-accent: #8470ff;
+  --tp-surface: #1a1928;
+  --tp-cloud: #17162a;
+  --tp-navy: #08070f;
+  --tp-yellow-bg: #261f0e;
+  --tp-yellow-ink: #ffc66b;
+  --tp-yellow-mid: #4a3a12;
+  --tp-blue-bg: #141a38;
+  --tp-blue-ink: #a9b8ff;
+  --tp-blue-mid: #22306b;
+  --tp-pink-bg: #2a1022;
+  --tp-pink-ink: #ff92cf;
+  --tp-pink-mid: #4e1a3d;
+  --tp-green-bg: #0e2619;
+  --tp-green-ink: #7de3a6;
+  --tp-green-mid: #1c4a30;
+  --tp-peach-bg: #2b140e;
+  --tp-peach-ink: #ffa88c;
+  --tp-peach-mid: #52241a;
+}
+.trippay ::selection {
+  background: var(--tp-accent);
+  color: #ffffff;
+}
+/* Heavy, wide display face for headings */
+.tp-display {
+  font-family: var(--font-tp-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 850;
+  font-stretch: 122%;
+  letter-spacing: -0.01em;
+  line-height: 0.98;
+}
+.trippay .tp-prose {
+  --tw-prose-body: var(--tp-ink);
+  --tw-prose-headings: var(--tp-ink);
+  --tw-prose-links: var(--tp-accent);
+  --tw-prose-bold: var(--tp-ink);
+  --tw-prose-bullets: var(--tp-muted);
+  --tw-prose-counters: var(--tp-muted);
+  --tw-prose-hr: var(--tp-line);
+  --tw-prose-quotes: var(--tp-muted);
+}
+.trippay details > summary::-webkit-details-marker {
+  display: none;
+}
