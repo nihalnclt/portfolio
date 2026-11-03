@@ -17,5 +17,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TrippayPrivacyPage() {
   const doc = await getLegalDoc("trippay-privacy");
-  return <TrippayDoc doc={doc} eyebrow="Legal" />;
+  return <TrippayDoc doc={doc} />;
 }

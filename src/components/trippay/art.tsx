@@ -1,4 +1,4 @@
-// Shapes and small icons for the Trippay pages. All drawn here, no external artwork.
+// Decorative shapes for the Trippay pages. All drawn here, no external artwork.
 
 type ShapeProps = { className?: string };
 
@@ -26,7 +26,23 @@ export function Blob({ className = "", fill }: ShapeProps & { fill: string }) {
   );
 }
 
-// Scalloped flower that sits behind phones.
+// Soft cloud used behind headings and under the hero phone.
+export function Cloud({ className = "" }: ShapeProps) {
+  return (
+    <svg viewBox="0 0 600 200" className={className} aria-hidden="true" preserveAspectRatio="none">
+      <g fill="var(--tp-cloud)">
+        <circle cx="110" cy="130" r="70" />
+        <circle cx="210" cy="90" r="85" />
+        <circle cx="330" cy="75" r="90" />
+        <circle cx="440" cy="100" r="80" />
+        <circle cx="510" cy="135" r="60" />
+        <rect x="80" y="120" width="460" height="80" rx="40" />
+      </g>
+    </svg>
+  );
+}
+
+// Scalloped flower that sits behind a phone in feature tiles.
 export function Flower({ className = "", fill }: ShapeProps & { fill: string }) {
   const petals = 12;
   const ring = 34;
@@ -35,7 +51,14 @@ export function Flower({ className = "", fill }: ShapeProps & { fill: string }) 
       <g fill={fill}>
         {Array.from({ length: petals }, (_, i) => {
           const a = (i / petals) * Math.PI * 2;
-          return <circle key={i} cx={50 + Math.cos(a) * ring} cy={50 + Math.sin(a) * ring} r="14" />;
+          return (
+            <circle
+              key={i}
+              cx={50 + Math.cos(a) * ring}
+              cy={50 + Math.sin(a) * ring}
+              r="14"
+            />
+          );
         })}
         <circle cx="50" cy="50" r="36" />
       </g>
