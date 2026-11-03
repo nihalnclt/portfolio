@@ -2,14 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Blob, CheckIcon, Cloud, Flower, PlusIcon } from "@/components/trippay/art";
+import { Blob, CheckIcon, Flower, PlusIcon } from "@/components/trippay/art";
 
 const title = "Trippay: Split Trip Expenses";
 const description =
   "Trippay is a group trip expense splitter for iPhone and Android. Add bills as you go, see who owes whom, and settle up in as few payments as possible.";
 
-// Set this once the app is live to turn the "coming soon" pills into download links.
+// Set these once the app is live; until then each download button renders disabled.
 const appStoreUrl: string | undefined = undefined;
+const playStoreUrl: string | undefined = undefined;
 
 export const dynamic = "force-static";
 
@@ -25,14 +26,84 @@ export const metadata: Metadata = {
   },
 };
 
-function StorePill({ className = "" }: { className?: string }) {
-  const base = `inline-flex items-center gap-2 rounded-full bg-tp-ink px-4 py-2 text-[14px] font-semibold text-tp-page ${className}`;
-  return appStoreUrl ? (
-    <a href={appStoreUrl} className={`${base} hover:opacity-85`}>
-      Download on the App Store
+/* ---------- Store buttons ---------- */
+
+function AppleLogo() {
+  return (
+    <svg viewBox="0 0 384 512" className="size-4 shrink-0" fill="currentColor" aria-hidden="true">
+      <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z" />
+    </svg>
+  );
+}
+
+function PlayLogo() {
+  return (
+    <svg viewBox="0 0 512 512" className="size-4 shrink-0" fill="currentColor" aria-hidden="true">
+      <path d="M325.3 234.3 104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
+    </svg>
+  );
+}
+
+// One store button. Without a URL it renders disabled, with a "Coming soon" hint.
+function StoreButton({ href, logo, label }: { href?: string; logo: ReactNode; label: string }) {
+  const base =
+    "inline-flex items-center gap-2 rounded-full bg-tp-ink px-4 py-2.5 text-[14px] font-semibold text-tp-page";
+  return href ? (
+    <a href={href} className={`${base} hover:opacity-85`}>
+      {logo}
+      {label}
     </a>
   ) : (
-    <span className={base}>Coming soon on iPhone and Android</span>
+    <button type="button" disabled title="Coming soon" className={`${base} cursor-not-allowed opacity-40`}>
+      {logo}
+      {label}
+    </button>
+  );
+}
+
+function StoreButtons({ className = "" }: { className?: string }) {
+  return (
+    <div className={`flex flex-wrap items-center gap-2.5 ${className}`}>
+      <StoreButton href={appStoreUrl} logo={<AppleLogo />} label="Download on the App Store" />
+      <StoreButton href={playStoreUrl} logo={<PlayLogo />} label="Get it on Google Play" />
+    </div>
+  );
+}
+
+/* ---------- Shared pieces ---------- */
+
+const phoneFade = "[mask-image:linear-gradient(to_bottom,black_70%,transparent)]";
+
+function Eyebrow({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center gap-2 rounded-full bg-tp-accent-tint px-3 py-1 text-[13px] font-semibold text-tp-accent">
+      <span className="size-1.5 rounded-full bg-tp-accent" />
+      {children}
+    </span>
+  );
+}
+
+function Heading({
+  eyebrow,
+  lines,
+  text,
+  center = false,
+}: {
+  eyebrow: string;
+  lines: [string, string];
+  text?: string;
+  center?: boolean;
+}) {
+  return (
+    <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-xl"}>
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 className="tp-display mt-4 text-[34px] text-tp-ink sm:text-[44px]">
+        {lines[0]}
+        <br />
+        <span className="text-tp-accent">{lines[1]}</span>
+      </h2>
+      {text && <p className="mt-4 text-[17px] leading-relaxed text-tp-muted">{text}</p>}
+    </div>
   );
 }
 
@@ -40,311 +111,279 @@ function StorePill({ className = "" }: { className?: string }) {
 
 function Hero() {
   return (
-    <section className="relative mx-auto max-w-5xl px-4 pt-6 text-center">
-      <Blob fill="var(--tp-accent)" className="absolute left-[6%] top-24 hidden w-20 -rotate-12 sm:block md:left-[16%] md:w-24" />
-      <Blob fill="var(--tp-pink-mid)" className="absolute right-[8%] top-44 hidden w-14 rotate-12 sm:block md:right-[18%]" />
+    <section className="mx-auto grid max-w-5xl items-center gap-12 px-4 pt-8 md:grid-cols-[1.05fr_1fr] md:gap-6 md:pt-16">
+      <div>
+        <Eyebrow>Group trip expense splitter</Eyebrow>
+        <h1 className="tp-display mt-5 text-[42px] text-tp-ink sm:text-[56px] lg:text-[64px]">
+          Travel together.
+          <br />
+          <span className="text-tp-accent">Split it fairly.</span>
+        </h1>
+        <p className="mt-5 max-w-md text-[17px] leading-relaxed text-tp-muted">
+          Add every bill as it happens, see who owes whom at a glance, and settle up in as few
+          payments as possible when the trip ends.
+        </p>
+        <StoreButtons className="mt-7" />
+        <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[14px] text-tp-muted">
+          {["No ads", "No subscription", "iPhone and Android"].map((t) => (
+            <li key={t} className="flex items-center gap-1.5">
+              <CheckIcon className="size-4 text-tp-accent" />
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <div className="relative mx-auto h-[230px] w-[200px] overflow-hidden md:h-[270px] md:w-[230px]">
+      <div className="relative mx-auto h-[400px] w-full max-w-[440px] sm:h-[480px]">
+        <Flower
+          fill="var(--tp-accent-tint)"
+          className="absolute left-1/2 top-1/2 w-[105%] max-w-[480px] -translate-x-1/2 -translate-y-1/2"
+        />
+        <Image
+          src="/images/trippay/phone-02-balances.webp"
+          alt="Balances for each person in the trip"
+          width={600}
+          height={1225}
+          sizes="200px"
+          className={`absolute left-[6%] top-[70px] w-[40%] max-w-[190px] -rotate-[8deg] drop-shadow-xl ${phoneFade}`}
+          priority
+        />
         <Image
           src="/images/trippay/phone-01-trip.webp"
-          alt="Trippay trip screen showing the group total"
+          alt="A trip screen showing the group total and what you get back"
           width={600}
           height={1225}
           sizes="230px"
-          className="w-full"
+          className={`absolute right-[8%] top-[18px] w-[47%] max-w-[225px] rotate-[4deg] drop-shadow-2xl ${phoneFade}`}
           priority
         />
-      </div>
-      <div className="relative -mt-24 md:-mt-28">
-        <Cloud className="mx-auto h-[150px] w-full max-w-[640px] md:h-[180px]" />
-        <h1 className="tp-display relative -mt-20 text-[44px] text-tp-ink sm:text-[64px] md:-mt-24 md:text-[84px]">
-          Travel together
-          <br />
-          <span className="text-tp-accent">Split it fairly</span>
-        </h1>
-      </div>
-      <p className="mx-auto mt-5 max-w-sm text-[17px] text-tp-muted">
-        The easy way to share costs on a group trip.
-      </p>
-      <StorePill className="mt-6" />
-    </section>
-  );
-}
 
-/* ---------- Bento ---------- */
-
-function Tile({ bg, children, className = "" }: { bg: string; children: ReactNode; className?: string }) {
-  return (
-    <div className={`overflow-hidden rounded-[28px] p-6 md:p-7 ${bg} ${className}`}>{children}</div>
-  );
-}
-
-function TileTitle({ color, children }: { color: string; children: ReactNode }) {
-  return <h2 className={`tp-display text-[28px] md:text-[32px] ${color}`}>{children}</h2>;
-}
-
-const splitModes = [
-  ["Equally", "Everyone pays the same"],
-  ["Amounts", "Exact figures per person"],
-  ["Percent", "A share of the total"],
-  ["Shares", "Two for you, one for them"],
-];
-
-const people = [
-  { name: "You", initial: "R", color: "bg-teal-600", amount: "₹10,816.66", note: "gets back", owes: false },
-  { name: "Arun", initial: "A", color: "bg-violet-600", amount: "₹5,466.67", note: "gets back", owes: false },
-  { name: "Meera", initial: "M", color: "bg-pink-700", amount: "₹7,700.00", note: "owes", owes: true },
-  { name: "Priya", initial: "P", color: "bg-blue-700", amount: "₹8,583.33", note: "owes", owes: true },
-];
-
-const payments = [
-  ["P", "R", "Priya pays You", "₹8,583.33", "-rotate-2"],
-  ["M", "A", "Meera pays Arun", "₹5,466.67", "rotate-1"],
-  ["M", "R", "Meera pays You", "₹2,233.33", "-rotate-1"],
-];
-
-const categories = [
-  ["Hotel", "₹24,000", 36, "bg-[#6b5cff]"],
-  ["Flights", "₹18,400", 28, "bg-[#1fa67a]"],
-  ["Food", "₹8,350", 13, "bg-[#f07b2c]"],
-];
-
-function Bento() {
-  return (
-    <section className="mx-auto mt-16 grid max-w-4xl gap-4 px-4 md:mt-24 md:grid-cols-2">
-      <div className="flex flex-col gap-4">
-        <Tile bg="bg-tp-yellow-bg">
-          <div className="flex items-start justify-between gap-3">
-            <TileTitle color="text-tp-yellow-ink">
-              Split any
-              <br />
-              way you like
-            </TileTitle>
-            <Blob fill="var(--tp-accent)" className="w-12 shrink-0" />
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-2.5">
-            {splitModes.map(([name, text]) => (
-              <div key={name} className="rounded-2xl bg-tp-surface p-3 shadow-sm">
-                <p className="text-[15px] font-bold text-tp-ink">{name}</p>
-                <p className="mt-0.5 text-[13px] leading-snug text-tp-muted">{text}</p>
-              </div>
-            ))}
-          </div>
-        </Tile>
-
-        <Tile bg="bg-tp-pink-bg" className="flex-1">
-          <TileTitle color="text-tp-pink-ink">
-            Settle up in
-            <br />
-            fewer payments
-          </TileTitle>
-          <p className="mt-3 text-[15px] leading-relaxed text-tp-muted">
-            Trippay works out the fewest transfers that clear every balance.
-          </p>
-          <div className="mt-6 flex flex-col gap-3">
-            {payments.map(([a, b, label, amount, tilt]) => (
-              <div key={label} className={`rounded-2xl bg-tp-surface p-3.5 shadow-md ${tilt}`}>
-                <div className="flex items-center gap-3">
-                  <span className="flex -space-x-2">
-                    <span className="grid size-7 place-items-center rounded-full bg-blue-700 text-[11px] font-bold text-white ring-2 ring-tp-surface">{a}</span>
-                    <span className="grid size-7 place-items-center rounded-full bg-teal-600 text-[11px] font-bold text-white ring-2 ring-tp-surface">{b}</span>
-                  </span>
-                  <span className="flex-1 text-[15px] font-semibold text-tp-ink">{label}</span>
-                  <span className="text-[15px] font-bold tabular-nums text-tp-ink">{amount}</span>
-                </div>
-                <p className="mt-2.5 rounded-xl bg-[color-mix(in_srgb,var(--tp-accent)_12%,transparent)] py-1.5 text-center text-[13px] font-semibold text-tp-accent">
-                  Mark as paid
-                </p>
-              </div>
-            ))}
-          </div>
-        </Tile>
-      </div>
-
-      <div className="flex flex-col gap-4">
-        <Tile bg="bg-tp-blue-bg" className="flex-1">
-          <TileTitle color="text-tp-blue-ink">
-            Know who
-            <br />
-            owes whom
-          </TileTitle>
-          <p className="mt-3 text-[15px] leading-relaxed text-tp-muted">
-            Balances update the moment anyone in the trip adds a bill.
-          </p>
-          <div className="mx-auto mt-6 max-w-[320px] rotate-[-4deg] rounded-3xl bg-tp-accent p-5 text-white shadow-xl">
-            <p className="text-[13px] text-white/75">Still to settle</p>
-            <p className="tp-display mt-1 text-[34px]">₹16,283.33</p>
-            <p className="text-[13px] text-white/75">across 3 payments</p>
-            <ul className="mt-4 space-y-2.5 rounded-2xl bg-white/10 p-3">
-              {people.map((p) => (
-                <li key={p.name} className="flex items-center gap-2.5">
-                  <span className={`grid size-7 place-items-center rounded-full text-[11px] font-bold ${p.color}`}>{p.initial}</span>
-                  <span className="flex-1 text-[14px] font-medium">{p.name}</span>
-                  <span className="text-right">
-                    <span className={`block text-[14px] font-bold tabular-nums ${p.owes ? "text-[#ffb4c4]" : "text-[#9ff0c0]"}`}>{p.amount}</span>
-                    <span className="block text-[11px] text-white/70">{p.note}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Tile>
-
-        <Tile bg="bg-tp-green-bg">
-          <TileTitle color="text-tp-green-ink">
-            See where the
-            <br />
-            money went
-          </TileTitle>
-          <p className="mt-3 text-[15px] leading-relaxed text-tp-muted">
-            Spending by category, by person and by day.
-          </p>
-          <div className="mt-5 space-y-3 rounded-2xl bg-tp-surface p-4 shadow-md">
-            {categories.map(([name, amount, pct, bar]) => (
-              <div key={name as string}>
-                <div className="flex justify-between text-[14px]">
-                  <span className="font-semibold text-tp-ink">{name}</span>
-                  <span className="tabular-nums text-tp-muted">
-                    {amount} · {pct}%
-                  </span>
-                </div>
-                <div className="mt-1.5 h-1.5 rounded-full bg-tp-line">
-                  <div className={`h-full rounded-full ${bar}`} style={{ width: `${(pct as number) * 2.2}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Tile>
-      </div>
-
-      <Tile bg="bg-tp-peach-bg" className="flex flex-col items-start gap-5 md:col-span-2 md:flex-row md:items-center">
-        <div className="flex-1">
-          <TileTitle color="text-tp-peach-ink">Pack your bags!</TileTitle>
-          <p className="mt-2 text-[15px] text-tp-muted">
-            Add your friends, add bills as you go, settle up at the end.
-          </p>
+        <div className="absolute right-0 top-[44%] w-[190px] rotate-[3deg] rounded-2xl bg-tp-surface p-3 shadow-xl ring-1 ring-tp-line sm:-right-4">
+          <p className="text-[12px] text-tp-muted">You get back</p>
+          <p className="text-[20px] font-bold tabular-nums text-[#1f8a3a] dark:text-[#30d158]">₹10,816.66</p>
         </div>
-        <Blob fill="var(--tp-yellow-mid)" className="hidden w-14 md:block" />
-        <StorePill />
-      </Tile>
-    </section>
-  );
-}
-
-/* ---------- Feature rows ---------- */
-
-type Feature = {
-  phone: string;
-  alt: string;
-  title: [string, string];
-  text: string;
-  points: string[];
-  bg: string;
-  mid: string;
-  ink: string;
-};
-
-const featureRows: Feature[] = [
-  {
-    phone: "phone-02-balances",
-    alt: "Balances screen with what each person owes or gets back",
-    title: ["Every bill in", "one place"],
-    text: "Add an expense in seconds: who paid, how much and who it was for. Everyone in the trip sees the same numbers.",
-    points: ["Split equally, by amount, percent or shares", "Advances and part payments", "Categories, notes and receipt photos"],
-    bg: "bg-tp-green-bg",
-    mid: "var(--tp-green-mid)",
-    ink: "text-tp-green-ink",
-  },
-  {
-    phone: "phone-05-analytics",
-    alt: "Analytics screen with spending by category",
-    title: ["Know where", "it all went"],
-    text: "See the trip by category, by person and by day, with shared and personal costs kept apart.",
-    points: ["Spending by category", "Totals per person and per day", "Shared and personal costs"],
-    bg: "bg-tp-yellow-bg",
-    mid: "var(--tp-yellow-mid)",
-    ink: "text-tp-yellow-ink",
-  },
-  {
-    phone: "phone-06-summary",
-    alt: "Trip summary with outstanding payments and totals",
-    title: ["Share the", "trip summary"],
-    text: "When the trip ends, get a clean final report of who paid what and who still owes whom.",
-    points: ["Export as PDF or CSV", "Outstanding payments at a glance", "Holidays, weekends and group travel"],
-    bg: "bg-tp-peach-bg",
-    mid: "var(--tp-peach-mid)",
-    ink: "text-tp-peach-ink",
-  },
-];
-
-function FeatureRows() {
-  return (
-    <section className="mx-auto mt-24 flex max-w-4xl flex-col gap-20 px-4 md:mt-32 md:gap-28">
-      {featureRows.map((f, i) => (
-        <div key={f.phone} className="grid items-center gap-8 md:grid-cols-2 md:gap-14">
-          <div className={`relative h-[380px] overflow-hidden rounded-[28px] md:h-[440px] ${f.bg} ${i % 2 ? "md:order-2" : ""}`}>
-            <Flower fill={f.mid} className="absolute left-1/2 top-1/2 w-[100%] max-w-none -translate-x-1/2 -translate-y-1/2" />
-            <Image
-              src={`/images/trippay/${f.phone}.webp`}
-              alt={f.alt}
-              width={600}
-              height={1225}
-              sizes="(min-width: 768px) 260px, 60vw"
-              className="absolute left-1/2 top-[12%] w-[62%] max-w-[260px] -translate-x-1/2"
-            />
-          </div>
-          <div>
-            <h2 className={`tp-display text-[36px] md:text-[44px] ${f.ink}`}>
-              {f.title[0]}
-              <br />
-              {f.title[1]}
-            </h2>
-            <p className="mt-4 text-[16px] leading-relaxed text-tp-muted">{f.text}</p>
-            <ul className="mt-5 space-y-2.5">
-              {f.points.map((p) => (
-                <li key={p} className={`flex items-center gap-2.5 text-[15px] font-medium ${f.ink}`}>
-                  <CheckIcon className="size-4 shrink-0" />
-                  {p}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="absolute bottom-6 left-0 flex w-[264px] -rotate-[3deg] items-center gap-2.5 rounded-2xl bg-tp-surface p-3 shadow-xl ring-1 ring-tp-line sm:-left-4">
+          <span className="flex -space-x-2">
+            <span className="grid size-7 place-items-center rounded-full bg-blue-700 text-[11px] font-bold text-white ring-2 ring-tp-surface">P</span>
+            <span className="grid size-7 place-items-center rounded-full bg-teal-600 text-[11px] font-bold text-white ring-2 ring-tp-surface">R</span>
+          </span>
+          <span className="flex-1 whitespace-nowrap text-[14px] font-semibold text-tp-ink">Priya pays You</span>
+          <span className="text-[14px] font-bold tabular-nums text-tp-ink">₹8,583.33</span>
         </div>
-      ))}
+
+        <Blob fill="var(--tp-yellow-mid)" className="absolute left-[2%] top-2 w-12 -rotate-12" />
+        <Blob fill="var(--tp-pink-mid)" className="absolute bottom-[22%] right-[4%] w-9 rotate-12" />
+      </div>
     </section>
   );
 }
 
-/* ---------- Trip unlock ---------- */
+/* ---------- How it works ---------- */
 
-const unlockPills = [
-  ["Multiple currencies", "bg-tp-blue-mid text-tp-blue-ink"],
-  ["Receipt photos", "bg-tp-pink-mid text-tp-pink-ink"],
-  ["Analytics", "bg-tp-green-mid text-tp-green-ink"],
-  ["PDF export", "bg-tp-yellow-mid text-tp-yellow-ink"],
-  ["CSV export", "bg-tp-peach-mid text-tp-peach-ink"],
-  ["For everyone in the trip", "bg-tp-accent text-white"],
+const steps = [
+  {
+    n: "01",
+    title: "Start a trip",
+    text: "Name it, add where and when, and add the people going.",
+    phone: "phone-07-trips",
+    alt: "A list of active, upcoming and completed trips",
+  },
+  {
+    n: "02",
+    title: "Add bills as you go",
+    text: "Who paid, how much, and how to split it: equally, by amount, percent or shares.",
+    phone: "phone-03-split",
+    alt: "Splitting a new expense equally between four people",
+  },
+  {
+    n: "03",
+    title: "Settle up",
+    text: "Trippay suggests the fewest payments that clear every balance. Mark each one as paid.",
+    phone: "phone-04-settle",
+    alt: "Suggested payments to settle every balance",
+  },
 ];
 
-function Unlock() {
+function HowItWorks() {
   return (
-    <section className="relative mx-auto mt-28 max-w-4xl px-4 text-center md:mt-36">
-      <Blob fill="var(--tp-green-mid)" className="absolute right-[8%] -top-8 w-14 rotate-12 md:right-[20%]" />
-      <div className="relative py-6">
-        <Cloud className="absolute left-1/2 top-0 h-full w-full max-w-[560px] -translate-x-1/2" />
-        <h2 className="tp-display relative text-[36px] text-tp-ink md:text-[48px]">Unlock a trip</h2>
-      </div>
-      <ul className="mx-auto mt-6 flex max-w-2xl flex-wrap justify-center gap-2.5">
-        {unlockPills.map(([label, cls]) => (
-          <li key={label} className={`rounded-full px-4 py-1.5 text-[15px] font-bold ${cls}`}>
-            {label}
+    <section id="how" className="mx-auto mt-24 max-w-5xl scroll-mt-24 px-4 md:mt-28">
+      <Heading center eyebrow="How it works" lines={["Three steps.", "Zero spreadsheets."]} />
+      <ol className="mt-12 grid gap-4 md:grid-cols-3">
+        {steps.map((s) => (
+          <li key={s.n} className="flex flex-col overflow-hidden rounded-[28px] bg-tp-soft ring-1 ring-tp-line">
+            <div className="p-6 pb-0">
+              <p className="tp-display text-[40px] text-tp-accent">{s.n}</p>
+              <h3 className="tp-display mt-2 text-[22px] text-tp-ink">{s.title}</h3>
+              <p className="mt-2 text-[15px] leading-relaxed text-tp-muted">{s.text}</p>
+            </div>
+            <div className="relative mt-6 h-[260px]">
+              <Image
+                src={`/images/trippay/${s.phone}.webp`}
+                alt={s.alt}
+                width={600}
+                height={1225}
+                sizes="220px"
+                className={`absolute left-1/2 top-0 w-[68%] max-w-[220px] -translate-x-1/2 drop-shadow-xl ${phoneFade}`}
+              />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+/* ---------- Features ---------- */
+
+function Icon({ d }: { d: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-5" aria-hidden="true">
+      <path d={d} />
+    </svg>
+  );
+}
+
+const features = [
+  {
+    title: "Split any way you like",
+    text: "Equally, by exact amounts, by percentage or by shares.",
+    icon: "M12 3v9l6.4 6.4M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9z",
+  },
+  {
+    title: "Know who owes whom",
+    text: "Balances update the moment anyone in the trip adds a bill.",
+    icon: "M12 3v18M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0zM8 21h8",
+  },
+  {
+    title: "Fewer payments",
+    text: "Trippay works out the fewest transfers that clear every balance.",
+    icon: "M4 7h13l-3-3M20 17H7l3 3",
+  },
+  {
+    title: "Advances and part payments",
+    text: "Record money handed over early, or a payment that covers part of a debt.",
+    icon: "M3 9h18v10H3zM3 9l3-5h12l3 5M12 13v2",
+  },
+  {
+    title: "See where it went",
+    text: "Spending by category, by person and by day.",
+    icon: "M4 20V10M10 20V4M16 20v-7M22 20H2",
+  },
+  {
+    title: "Share the summary",
+    text: "A clean final report of the trip, ready as PDF or CSV.",
+    icon: "M14 3H6v18h12V7zM14 3v4h4M9 13h6M9 17h6",
+  },
+];
+
+function Features() {
+  return (
+    <section id="features" className="mx-auto mt-28 max-w-5xl scroll-mt-24 px-4 md:mt-36">
+      <Heading
+        eyebrow="Features"
+        lines={["Built for messy", "group money."]}
+        text="Someone pays for the hotel, someone covers dinner, someone hands over cash for fuel. Trippay keeps it all straight."
+      />
+      <ul className="mt-12 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+        {features.map((f) => (
+          <li key={f.title} className="rounded-[24px] bg-tp-surface p-6 ring-1 ring-tp-line">
+            <span className="grid size-11 place-items-center rounded-2xl bg-tp-accent-tint text-tp-accent">
+              <Icon d={f.icon} />
+            </span>
+            <h3 className="mt-5 text-[17px] font-bold text-tp-ink">{f.title}</h3>
+            <p className="mt-1.5 text-[15px] leading-relaxed text-tp-muted">{f.text}</p>
           </li>
         ))}
       </ul>
-      <p className="mx-auto mt-6 max-w-md text-[16px] leading-relaxed text-tp-muted">
-        A one-time purchase per trip, on iPhone and Android. No subscription. Trippay is free to
-        use for a trip without it.
-      </p>
+    </section>
+  );
+}
+
+/* ---------- Screens strip ---------- */
+
+const screens = [
+  ["phone-01-trip", "Every bill in one place"],
+  ["phone-02-balances", "Know who owes whom"],
+  ["phone-03-split", "Split any way you like"],
+  ["phone-04-settle", "Settle up in fewer payments"],
+  ["phone-05-analytics", "See where the money went"],
+  ["phone-06-summary", "Share the trip summary"],
+  ["phone-07-trips", "Every trip, one app"],
+];
+
+function Screens() {
+  return (
+    <section aria-label="App screens" className="mx-auto mt-28 max-w-5xl px-4 md:mt-36">
+      <div className="relative overflow-hidden rounded-[32px] bg-tp-accent-tint py-12 md:py-16">
+        <Blob fill="var(--tp-yellow-mid)" className="absolute right-6 top-6 w-12 rotate-12 md:right-12" />
+        <div className="px-6 md:px-12">
+          <Heading eyebrow="A closer look" lines={["Made for the trip,", "not the office."]} />
+        </div>
+        <ul className="mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-4 md:px-12 [scrollbar-width:thin]">
+          {screens.map(([src, caption]) => (
+            <li key={src} className="w-[200px] shrink-0 snap-start sm:w-[220px]">
+              <Image
+                src={`/images/trippay/${src}.webp`}
+                alt={caption}
+                width={600}
+                height={1225}
+                sizes="220px"
+                className={`w-full drop-shadow-xl ${phoneFade}`}
+              />
+              <p className="mt-3 text-[14px] font-semibold text-tp-ink">{caption}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Pricing ticket ---------- */
+
+const unlocks = [
+  "Multiple currencies",
+  "Receipt photos",
+  "Analytics",
+  "PDF and CSV export",
+  "For everyone in the trip",
+  "On iPhone and Android",
+];
+
+function Pricing() {
+  return (
+    <section id="pricing" className="mx-auto mt-28 max-w-5xl scroll-mt-24 px-4 md:mt-36">
+      <Heading center eyebrow="Pricing" lines={["One trip, one unlock.", "No subscription."]} />
+      <div className="relative mx-auto mt-12 flex max-w-3xl flex-col overflow-hidden rounded-[28px] shadow-xl ring-1 ring-tp-line md:flex-row">
+        {/* Ticket stub */}
+        <div className="relative bg-tp-band px-7 py-8 text-white md:w-[260px] md:shrink-0">
+          <p className="font-mono text-[12px] uppercase tracking-[0.25em] text-white/70">Trip unlock</p>
+          <p className="tp-display mt-3 text-[36px]">One-time</p>
+          <p className="mt-1 text-[15px] text-white/80">per trip, for the whole group</p>
+          <p className="mt-6 font-mono text-[12px] uppercase tracking-[0.2em] text-white/60">Admit everyone</p>
+        </div>
+        {/* Perforation, with notches cut where the stub tears off */}
+        <div className="relative h-0 border-t-2 border-dashed border-tp-line md:h-auto md:w-0 md:border-l-2 md:border-t-0">
+          <span className="absolute -left-3 -top-3 size-6 rounded-full bg-tp-page md:-left-3 md:-top-3" />
+          <span className="absolute -right-3 -top-3 size-6 rounded-full bg-tp-page md:-bottom-3 md:-left-3 md:right-auto md:top-auto" />
+        </div>
+        <div className="flex-1 bg-tp-surface px-7 py-8">
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {unlocks.map((u) => (
+              <li key={u} className="flex items-center gap-2.5 text-[15px] font-medium text-tp-ink">
+                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-tp-accent-tint text-tp-accent">
+                  <CheckIcon className="size-3.5" />
+                </span>
+                {u}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 border-t border-dashed border-tp-line pt-5 text-[14px] leading-relaxed text-tp-muted">
+            Bought on one phone, it unlocks the trip for every member. Refunds go through Apple or
+            Google as usual.
+          </p>
+        </div>
+      </div>
     </section>
   );
 }
@@ -390,30 +429,59 @@ const faqs: { q: string; a: ReactNode }[] = [
 
 function Faq() {
   return (
-    <section className="mx-auto mt-28 grid max-w-4xl gap-8 px-4 md:mt-36 md:grid-cols-[1fr_1.5fr] md:gap-12">
-      <h2 className="tp-display text-[36px] text-tp-ink md:text-[44px]">
-        Frequently
-        <br />
-        asked
-        <br />
-        questions
-      </h2>
-      <div className="divide-y divide-tp-line">
+    <section id="faq" className="mx-auto mt-28 max-w-3xl scroll-mt-24 px-4 md:mt-36">
+      <Heading center eyebrow="FAQ" lines={["Questions,", "answered."]} />
+      <div className="mt-10 border-t border-dashed border-tp-line">
         {faqs.map((f) => (
-          <details key={f.q} className="group py-3.5">
-            <summary className="flex cursor-pointer list-none items-start gap-3 text-[16px] font-semibold text-tp-ink">
-              <PlusIcon className="mt-1 size-4 shrink-0 text-tp-accent transition-transform group-open:rotate-45" />
+          <details key={f.q} className="group border-b border-dashed border-tp-line py-5">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold text-tp-ink">
               {f.q}
+              <span className="grid size-7 shrink-0 place-items-center rounded-full bg-tp-accent-tint text-tp-accent">
+                <PlusIcon className="size-3.5 transition-transform group-open:rotate-45" />
+              </span>
             </summary>
-            <p className="mt-2 pl-7 text-[15px] leading-relaxed text-tp-muted">{f.a}</p>
+            <p className="mt-3 pr-10 text-[15px] leading-relaxed text-tp-muted">{f.a}</p>
           </details>
         ))}
-        <p className="pt-5 text-[15px] text-tp-muted">
-          Still stuck?{" "}
-          <Link href="/trippay/support" className="font-semibold text-tp-accent hover:underline">
-            Visit support
-          </Link>
-        </p>
+      </div>
+      <p className="mt-6 text-center text-[15px] text-tp-muted">
+        Still stuck?{" "}
+        <Link href="/trippay/support" className="font-semibold text-tp-accent hover:underline">
+          Visit support
+        </Link>
+      </p>
+    </section>
+  );
+}
+
+/* ---------- Closing ---------- */
+
+function Closing() {
+  return (
+    <section className="mx-auto mt-28 max-w-5xl px-4 md:mt-36">
+      <div className="relative overflow-hidden rounded-[32px] bg-tp-accent-tint px-6 pt-10 md:grid md:grid-cols-[1.2fr_1fr] md:items-center md:px-12 md:pt-0">
+        <div className="relative z-10 md:py-14">
+          <h2 className="tp-display text-[34px] text-tp-ink sm:text-[44px]">
+            Your next trip,
+            <br />
+            <span className="text-tp-accent">sorted.</span>
+          </h2>
+          <p className="mt-4 max-w-md text-[17px] leading-relaxed text-tp-muted">
+            Add your friends, add bills as you go, and settle up at the end.
+          </p>
+          <StoreButtons className="mt-7" />
+        </div>
+        <div className="relative mx-auto mt-10 h-[260px] w-full max-w-[300px] md:mt-0 md:h-[340px]">
+          <Image
+            src="/images/trippay/phone-07-trips.webp"
+            alt="A list of active, upcoming and completed trips"
+            width={600}
+            height={1225}
+            sizes="220px"
+            className="absolute bottom-0 left-1/2 w-[72%] max-w-[220px] -translate-x-1/2 translate-y-[38%] rotate-[4deg] drop-shadow-2xl md:translate-y-[30%]"
+          />
+          <Blob fill="var(--tp-pink-mid)" className="absolute left-0 top-2 w-11 -rotate-12" />
+        </div>
       </div>
     </section>
   );
@@ -423,10 +491,12 @@ export default function TrippayPage() {
   return (
     <div className="overflow-x-hidden pb-8">
       <Hero />
-      <Bento />
-      <FeatureRows />
-      <Unlock />
+      <HowItWorks />
+      <Features />
+      <Screens />
+      <Pricing />
       <Faq />
+      <Closing />
     </div>
   );
 }

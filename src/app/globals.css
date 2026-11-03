@@ -140,6 +140,9 @@ body {
   --tp-accent: #684cfb;
   --tp-surface: #ffffff;
   --tp-cloud: #f1f0f8;
+  --tp-accent-tint: #ece8ff;
+  --tp-soft: #f7f6fc;
+  --tp-band: #684cfb;
   --tp-navy: #15122e;
   --tp-yellow-bg: #fff2d9;
   --tp-yellow-ink: #8a5300;
@@ -168,6 +171,9 @@ body {
   --tp-accent: #8470ff;
   --tp-surface: #1a1928;
   --tp-cloud: #17162a;
+  --tp-accent-tint: #1f1846;
+  --tp-soft: #13121f;
+  --tp-band: #3f2fb0;
   --tp-navy: #08070f;
   --tp-yellow-bg: #261f0e;
   --tp-yellow-ink: #ffc66b;
@@ -209,4 +215,16 @@ body {
 }
 .trippay details > summary::-webkit-details-marker {
   display: none;
+}
+
+/* Torn receipt edges, echoing the app icon */
+.tp-zig-bottom {
+  --tp-zig: 18px;
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tp-zig) 100%;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tp-zig) 100%;
+}
+.tp-zig-top {
+  --tp-zig: 18px;
+  -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tp-zig) 100%;
+  mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--tp-zig) 100%;
 }

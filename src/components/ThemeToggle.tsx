@@ -3,7 +3,17 @@
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "@/components/icons";
 
-export default function ThemeToggle({ className = "" }: { className?: string }) {
+const defaultLook =
+  "border border-line bg-surface text-faint transition-colors hover:border-line-strong hover:text-heading";
+
+// `look` replaces the default colours, so other sections (e.g. Trippay) can restyle it.
+export default function ThemeToggle({
+  className = "",
+  look = defaultLook,
+}: {
+  className?: string;
+  look?: string;
+}) {
   // null until mounted so the server render carries no theme assumption
   const [isDark, setIsDark] = useState<boolean | null>(null);
 
@@ -23,7 +33,7 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
       type="button"
       onClick={toggle}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border border-line bg-surface text-faint transition-colors hover:border-line-strong hover:text-heading ${className}`}
+      className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${look} ${className}`}
     >
       {isDark !== null && (isDark ? <Sun /> : <Moon />)}
     </button>
