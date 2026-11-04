@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Nihal N",
   tagline: "Software Developer | Indiehacker",
   // TODO: replace with the production domain
-  siteUrl: "https://example.com",
+  siteUrl: "https://nihaln.com",
   description:
     "Full stack developer from Kozhikode, Kerala, building scalable web applications and indie projects.",
   email: "nihalnclt@gmail.com",

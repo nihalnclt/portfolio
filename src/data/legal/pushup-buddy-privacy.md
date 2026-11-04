@@ -65,8 +65,8 @@ These providers process data only to provide their service to us:
 
 - **Apple and Google:** sign-in, if you choose them. Apple also handles all
   payments; we never see your card details.
-- **RevenueCat:** manages subscriptions. It receives your account ID and
-  purchase history from the App Store.
+- **RevenueCat:** manages subscriptions. It receives a random account ID (not
+  your name or email) and your purchase history from the App Store.
 - **Resend:** delivers sign-in code emails. It receives your email address and
   the code.
 - **Cloudflare:** network protection for our server. It processes your IP
@@ -78,10 +78,13 @@ These providers process data only to provide their service to us:
 ## 6. How long we keep it
 
 - We keep account and training data until you delete your account.
-- When you delete your account, your account, training data and sessions are
-  deleted from our database immediately.
-- Copies may remain in server backups for up to 14 days before they are
-  overwritten.
+- Deleting your account immediately deletes your account, training data,
+  sign-in sessions and sign-in codes from our database.
+- Copies may remain in server backups for up to 14 days.
+- RevenueCat and Apple keep a record of your purchases for billing and tax
+  reasons. That record is linked only to a random ID, which no longer matches
+  any account once yours is deleted.
+- Sign-in codes that are never used are deleted after one day.
 
 ## 7. Deleting your account and your rights
 
