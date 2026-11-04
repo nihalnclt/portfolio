@@ -46,6 +46,17 @@ const config: Config = {
           "peach-ink": "var(--tp-peach-ink)",
           "peach-mid": "var(--tp-peach-mid)",
         },
+        // Majlisunnoor product pages (tokens in globals.css under .majlis)
+        mj: {
+          page: "var(--mj-page)",
+          surface: "var(--mj-surface)",
+          ink: "var(--mj-ink)",
+          muted: "var(--mj-muted)",
+          line: "var(--mj-line)",
+          green: "var(--mj-green)",
+          gold: "var(--mj-gold)",
+          hero: "var(--mj-hero)",
+        },
       },
       // Font stacks mirror kulpinski.dev
       fontFamily: {

@@ -210,3 +210,62 @@ body {
 .trippay details > summary::-webkit-details-marker {
   display: none;
 }
+
+/* Majlisunnoor product pages: warm paper, deep green and gold from the app icon */
+.majlis {
+  --mj-page: #f6f2e8;
+  --mj-surface: #fcfaf4;
+  --mj-ink: #13201a;
+  --mj-muted: #5d665f;
+  --mj-line: #e2dac6;
+  --mj-green: #0b5d2a;
+  --mj-gold: #b8892b;
+  --mj-hero: #0b5d2a;
+  background: var(--mj-page);
+  color: var(--mj-ink);
+  font-family: var(--font-mj-sans), ui-sans-serif, system-ui, sans-serif;
+}
+.dark .majlis {
+  --mj-page: #0b0d0c;
+  --mj-surface: #121614;
+  --mj-ink: #eceee8;
+  --mj-muted: #9aa29d;
+  --mj-line: #2a2f2b;
+  --mj-green: #5dc283;
+  --mj-gold: #e3bc5c;
+  --mj-hero: #123b23;
+}
+.majlis ::selection {
+  background: var(--mj-green);
+  color: var(--mj-page);
+}
+/* Headings: Plus Jakarta Sans, heavy and tight */
+.mj-heading {
+  font-family: var(--font-mj-sans), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.majlis .mj-prose {
+  --tw-prose-body: var(--mj-ink);
+  --tw-prose-headings: var(--mj-ink);
+  --tw-prose-links: var(--mj-green);
+  --tw-prose-bold: var(--mj-ink);
+  --tw-prose-bullets: var(--mj-gold);
+  --tw-prose-counters: var(--mj-muted);
+  --tw-prose-hr: var(--mj-line);
+  --tw-prose-quotes: var(--mj-muted);
+}
+
+/* Majlisunnoor hero flag: a slow sway from the pole */
+.majlis .mj-flag-wave {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: mj-flag-wave 5s ease-in-out infinite;
+}
+@keyframes mj-flag-wave {
+  0%, 100% { transform: skewY(0deg) scaleX(1); }
+  50% { transform: skewY(-2.5deg) scaleX(0.97); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .majlis .mj-flag-wave { animation: none; }
+}

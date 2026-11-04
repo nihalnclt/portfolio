@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/trippay",
     "/trippay/privacy",
     "/trippay/support",
+    "/majlisunnoor",
     "/majlisunnoor/privacy",
     "/majlisunnoor/support",
   ].map((route) => ({

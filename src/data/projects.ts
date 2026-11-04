@@ -34,4 +34,15 @@ export const projects: ProjectType[] = [
     tags: ["Expo", "Fastify"],
     featured: true,
   },
+  {
+    id: 4,
+    name: "Majlisunnoor",
+    iconSrc: "/images/projects/majlisunnoor.png",
+    description:
+      "Offline devotional reading app for iPhone and Android - the surahs, duas and Badr Baith, typeset with justified Arabic.",
+    url: "/majlisunnoor",
+    badge: { label: "Building", tone: "amber" },
+    tags: ["Expo", "Skia"],
+    featured: true,
+  },
 ];
