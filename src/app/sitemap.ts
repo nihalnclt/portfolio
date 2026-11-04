@@ -15,6 +15,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/majlisunnoor",
     "/majlisunnoor/privacy",
     "/majlisunnoor/support",
+    "/pushup-buddy/privacy",
+    "/pushup-buddy/terms",
+    "/pushup-buddy/support",
   ].map((route) => ({
     url: `${siteConfig.siteUrl}${route}`,
     lastModified: new Date(),

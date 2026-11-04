@@ -57,6 +57,15 @@ const config: Config = {
           gold: "var(--mj-gold)",
           hero: "var(--mj-hero)",
         },
+        // Pushup Buddy product pages (tokens in globals.css under .pushup)
+        pb: {
+          page: "var(--pb-page)",
+          ink: "var(--pb-ink)",
+          muted: "var(--pb-muted)",
+          line: "var(--pb-line)",
+          accent: "var(--pb-accent)",
+          "accent-fill": "var(--pb-accent-fill)",
+        },
       },
       // Font stacks mirror kulpinski.dev
       fontFamily: {
