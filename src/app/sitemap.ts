@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/majlisunnoor",
     "/majlisunnoor/privacy",
     "/majlisunnoor/support",
+    "/pushup-buddy",
     "/pushup-buddy/privacy",
     "/pushup-buddy/terms",
     "/pushup-buddy/support",

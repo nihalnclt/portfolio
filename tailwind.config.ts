@@ -65,6 +65,10 @@ const config: Config = {
           line: "var(--pb-line)",
           accent: "var(--pb-accent)",
           "accent-fill": "var(--pb-accent-fill)",
+          surface: "var(--pb-surface)",
+          soft: "var(--pb-soft)",
+          faint: "var(--pb-faint)",
+          panel: "var(--pb-panel)",
         },
       },
       // Font stacks mirror kulpinski.dev

@@ -272,15 +272,21 @@ body {
 
 /* Pushup Buddy product pages: iOS grouped neutrals and the app's ember red accent */
 .pushup {
-  --pb-page: #f2f2f7;
+  --pb-page: #ffffff;
   --pb-ink: #000000;
   --pb-muted: #5c5c63;
   --pb-line: #d8d8de;
   --pb-accent: #c42a1e;
   --pb-accent-fill: #d9302a;
+  --pb-surface: #ffffff;
+  --pb-soft: #e9e9ee;
+  --pb-faint: #8e8e93;
+  --pb-panel: #141416;
   background: var(--pb-page);
   color: var(--pb-ink);
   font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* No tabular figures here: they widen the hyphen in "Push-Up" */
+  font-feature-settings: "liga" 1, "calt" 1, "ss01" 1, "cv11" 1;
 }
 .dark .pushup {
   --pb-page: #000000;
@@ -289,6 +295,10 @@ body {
   --pb-line: #2c2c2e;
   --pb-accent: #ff5a4a;
   --pb-accent-fill: #e8392b;
+  --pb-surface: #1c1c1e;
+  --pb-soft: #2c2c2e;
+  --pb-faint: #7c7c83;
+  --pb-panel: #111113;
 }
 .pushup ::selection {
   background: var(--pb-accent-fill);
@@ -307,4 +317,16 @@ body {
   --tw-prose-counters: var(--pb-muted);
   --tw-prose-hr: var(--pb-line);
   --tw-prose-quotes: var(--pb-muted);
+}
+
+/* Pushup Buddy footer: endless line of big text */
+.pushup .pb-marquee {
+  animation: pb-marquee 32s linear infinite;
+}
+@keyframes pb-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pushup .pb-marquee { animation: none; }
 }
