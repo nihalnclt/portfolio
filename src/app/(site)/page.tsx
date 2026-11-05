@@ -12,7 +12,9 @@ import { getAllPosts } from "@/lib/posts";
 export default function Home() {
   const taglineParts = siteConfig.tagline.split(" | ");
   const recentPosts = getAllPosts().slice(0, 4);
-  const featuredProjects = projects.filter((project) => project.featured).slice(0, 4);
+  const featured = projects.filter((project) => project.featured);
+  const bigProjects = featured.filter((project) => !project.small).slice(0, 4);
+  const smallProjects = featured.filter((project) => project.small);
 
   return (
     <div className="container flex flex-col gap-14 pb-24 pt-8">
@@ -78,10 +80,18 @@ export default function Home() {
         className="animate-fade-up [animation-delay:320ms]"
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {featuredProjects.map((project) => (
+          {bigProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}
         </div>
+        {/* Smaller projects as compact tiles in a row below; new ones fill in beside them */}
+        {smallProjects.length > 0 && (
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {smallProjects.map((project) => (
+              <ProjectCard key={project.id} project={project} compact />
+            ))}
+          </div>
+        )}
       </Section>
 
       <div className="animate-fade-up [animation-delay:400ms]">

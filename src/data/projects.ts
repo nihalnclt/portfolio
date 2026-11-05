@@ -35,14 +35,27 @@ export const projects: ProjectType[] = [
     featured: true,
   },
   {
+    id: 5,
+    name: "Pushup Buddy",
+    iconSrc: "/images/projects/pushup-buddy.png",
+    description:
+      "Adaptive push-up trainer - one small target every training day that adjusts to how you actually perform. Free, offline, no account needed.",
+    url: "/pushup-buddy",
+    badge: { label: "Building", tone: "amber" },
+    tags: ["Expo", "Fastify"],
+    featured: true,
+  },
+  {
     id: 4,
     name: "Majlisunnoor",
     iconSrc: "/images/projects/majlisunnoor.png",
+    tagline: "The Badr Baith on your phone",
     description:
       "Offline devotional reading app for iPhone and Android - the surahs, duas and Badr Baith, typeset with justified Arabic.",
     url: "/majlisunnoor",
     badge: { label: "Building", tone: "amber" },
     tags: ["Expo", "Skia"],
     featured: true,
+    small: true,
   },
 ];
