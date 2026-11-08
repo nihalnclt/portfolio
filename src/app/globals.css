@@ -330,3 +330,40 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .pushup .pb-marquee { animation: none; }
 }
+
+/* Expenso product pages: the app's mist neutrals and violet accent (apps/mobile/src/theme/tokens.ts) */
+.expenso {
+  --ex-page: #f6f6fa;
+  --ex-ink: #141826;
+  --ex-muted: #6b6f80;
+  --ex-line: #e6e6ef;
+  --ex-accent: #7c5cfc;
+  background: var(--ex-page);
+  color: var(--ex-ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+.dark .expenso {
+  --ex-page: #0f1016;
+  --ex-ink: #f3f3f8;
+  --ex-muted: #9a9dae;
+  --ex-line: #262835;
+  --ex-accent: #9d86ff;
+}
+.expenso ::selection {
+  background: var(--ex-accent);
+  color: #ffffff;
+}
+.ex-heading {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.expenso .ex-prose {
+  --tw-prose-body: var(--ex-ink);
+  --tw-prose-headings: var(--ex-ink);
+  --tw-prose-links: var(--ex-accent);
+  --tw-prose-bold: var(--ex-ink);
+  --tw-prose-bullets: var(--ex-accent);
+  --tw-prose-counters: var(--ex-muted);
+  --tw-prose-hr: var(--ex-line);
+  --tw-prose-quotes: var(--ex-muted);
+}

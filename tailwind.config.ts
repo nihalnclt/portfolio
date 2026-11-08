@@ -70,6 +70,14 @@ const config: Config = {
           faint: "var(--pb-faint)",
           panel: "var(--pb-panel)",
         },
+        // Expenso product pages (tokens in globals.css under .expenso)
+        ex: {
+          page: "var(--ex-page)",
+          ink: "var(--ex-ink)",
+          muted: "var(--ex-muted)",
+          line: "var(--ex-line)",
+          accent: "var(--ex-accent)",
+        },
       },
       // Font stacks mirror kulpinski.dev
       fontFamily: {
