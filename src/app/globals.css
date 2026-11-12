@@ -367,3 +367,40 @@ body {
   --tw-prose-hr: var(--ex-line);
   --tw-prose-quotes: var(--ex-muted);
 }
+
+/* Oppam product pages: the app's white page, charcoal type and magenta accent (apps/mobile/src/theme/tokens.ts) */
+.oppam {
+  --op-page: #ffffff;
+  --op-ink: #252536;
+  --op-muted: #6b6878;
+  --op-line: #e8e8eb;
+  --op-accent: #c84267;
+  background: var(--op-page);
+  color: var(--op-ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+.dark .oppam {
+  --op-page: #141419;
+  --op-ink: #f6f4f5;
+  --op-muted: #a8a5ae;
+  --op-line: #2c2c38;
+  --op-accent: #ff7568;
+}
+.oppam ::selection {
+  background: #c84267;
+  color: #ffffff;
+}
+.op-heading {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.oppam .op-prose {
+  --tw-prose-body: var(--op-ink);
+  --tw-prose-headings: var(--op-ink);
+  --tw-prose-links: var(--op-accent);
+  --tw-prose-bold: var(--op-ink);
+  --tw-prose-bullets: var(--op-accent);
+  --tw-prose-counters: var(--op-muted);
+  --tw-prose-hr: var(--op-line);
+  --tw-prose-quotes: var(--op-muted);
+}

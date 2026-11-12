@@ -21,6 +21,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/pushup-buddy/support",
     "/expenso/privacy",
     "/expenso/support",
+    "/oppam/privacy",
+    "/oppam/terms",
+    "/oppam/support",
   ].map((route) => ({
     url: `${siteConfig.siteUrl}${route}`,
     lastModified: new Date(),

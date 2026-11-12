@@ -78,6 +78,14 @@ const config: Config = {
           line: "var(--ex-line)",
           accent: "var(--ex-accent)",
         },
+        // Oppam product pages (tokens in globals.css under .oppam)
+        op: {
+          page: "var(--op-page)",
+          ink: "var(--op-ink)",
+          muted: "var(--op-muted)",
+          line: "var(--op-line)",
+          accent: "var(--op-accent)",
+        },
       },
       // Font stacks mirror kulpinski.dev
       fontFamily: {
