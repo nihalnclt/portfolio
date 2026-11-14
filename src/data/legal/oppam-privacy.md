@@ -3,7 +3,7 @@ title: "Oppam Privacy Policy"
 description: "What Oppam collects, why, who can see it, how long it is kept, and how to get a copy of your data or delete your account."
 ---
 
-Effective date: 13 November 2026
+Effective date: 14 November 2026
 
 Oppam is a dating app run by Nihal, an individual developer in India ("we",
 "us"). This policy explains what the app collects about you, why, who sees it,
@@ -23,10 +23,11 @@ do not allow anyone under 18 to create a profile. If you believe someone under
 ### Information you give us
 
 - Profile details: first name, date of birth, gender, city and district, what you are looking for, and anything you choose to add, such as a short bio, work, education, height, languages, interests, lifestyle answers and prompt answers.
+- Whether you have been married before, whether you have children, and when you hope to settle down, only if you choose to answer. Each is optional.
 - Religion, only if you choose to add it. It is optional, and you can remove it at any time by editing your profile.
-- Photos you upload to your profile.
+- Photos you upload to your profile. They appear on your profile straight away, and a person on our side looks at new photos afterwards and removes any that break the rules.
 - A selfie, only if you ask to be verified. A person on our side compares it with your profile photos. The selfie is deleted as soon as the review is finished, whether it is approved or rejected.
-- Your phone number. It is stored but not verified, it is never shown to other members, and it is not used to sign you in.
+- Your phone number. It is required to create a profile. It is stored but not verified, it is never shown to other members, and it is not used to sign you in.
 - Messages you send to your matches, notes you attach to likes, and date plans you create.
 - Reports you make about other members, and blocks.
 
@@ -38,8 +39,7 @@ do not allow anyone under 18 to create a profile. If you believe someone under
 
 ### Information from your device
 
-- A random sign-in key created by the app and kept in your phone's secure storage. We store only a fingerprint of it.
-- If you sign in with Apple or Google: the account identifier they give us and, where they provide it, your email address. We never receive your Apple or Google password.
+- You sign in with Apple or Google; there is no separate Oppam password. We receive the account identifier they give us and, where they provide it, your email address. We never receive your Apple or Google password.
 - A push notification token, if you allow notifications.
 - Technical logs, such as your IP address and the time of each request, which we use to keep the service secure and to fix problems.
 
@@ -54,7 +54,7 @@ deletes the fingerprints.
 
 ### What we do not collect
 
-- We do not collect your precise location. The app uses the city you choose, and distances are measured between cities and rounded.
+- We do not collect your precise location. If you tap "Use my current location", your phone works out the nearest city on the device and only the city name is sent to us. Distances are measured between cities and rounded.
 - We do not show advertising, and we do not use advertising or analytics trackers.
 
 ## How we use your information
@@ -63,7 +63,7 @@ deletes the fingerprints.
 - To create matches and let matched members chat.
 - To pick your Daily Match.
 - To send you notifications about likes, matches and messages.
-- To review selfies, review reports, and remove accounts that break the rules.
+- To review selfies, photos and reports, and remove accounts that break the rules.
 - To keep the service secure and working.
 
 We do not sell your information, and we do not use it for advertising.
@@ -71,7 +71,9 @@ We do not sell your information, and we do not use it for advertising.
 ## What other members can see
 
 Other members can see your first name, age, city, photos, bio, prompt answers
-and the other profile details you add, a verified badge if you have one, and a
+and the other profile details you add, including whether you have been married
+before, whether you have children and when you hope to settle down if you
+answer those, a verified badge if you have one, and a
 rounded distance and last active time unless you switch those off in Safety
 settings. Members never see your phone number, date of birth, email address or
 contacts.
@@ -82,9 +84,22 @@ Messages you send can be seen by the person you sent them to.
 
 - Hosting and storage providers that run our servers and store photos on our behalf.
 - Notification services (Expo, Apple and Google), which deliver push notifications. They receive your push token and the text of the notification.
-- Apple or Google, if you choose to sign in with them.
-- Apple or Google, for payments, if you buy a plan. We do not receive or store your card details.
+- Apple or Google, when you sign in with them.
+- Apple, for payments, if you buy a plan, and RevenueCat, which tells us that a plan was bought or renewed. RevenueCat receives your Oppam account id and the purchase details, not your name, photos or messages. We do not receive or store your card details.
 - Authorities, when the law requires it, or when needed to protect someone's safety.
+
+## Trusted person
+
+You can choose one trusted person, such as a family member or friend, and send
+them a private link. While your Daily Match is open, the link shows them that
+person's first photo, first name, age, city, what they are looking for, a short
+"about" line and interests, and lets them send you an opinion and a short note.
+They do not need an account and never see your chats, likes or other matches.
+We store the name you give them, the link, and their answers; removing them or
+making a new link stops the old link working, and deleting your account deletes
+all of it. If you do not want to be shown to someone's trusted person when you
+are their Daily Match, turn off Settings > Privacy > "Show me to trusted
+persons".
 
 ## How long we keep it
 
@@ -105,14 +120,14 @@ cannot be used to register again.
 - See and correct: you can view and edit your profile in the app at any time.
 - Get a copy: Settings, Data and privacy, Download my data gives you a file with your information.
 - Delete: Settings, Data and privacy, Delete my account erases your account as described above.
-- Withdraw consent: you can remove optional details such as religion, switch off "Hide from contacts", and switch off notifications at any time.
+- Withdraw consent: you can remove optional details such as religion, whether you have been married before, whether you have children and when you hope to settle down, remove your trusted person, switch off "Hide from contacts" and "Show me to trusted persons", and switch off notifications at any time.
 - Pause: you can pause your profile so that new people do not see you.
 - Complain: write to [nihalnclt@gmail.com](mailto:nihalnclt@gmail.com). We will reply within 30 days. If you are in India, you also have the right to complain to the Data Protection Board of India.
 
 ## Security
 
-Connections to our servers are encrypted. Sign-in keys and contact numbers are
-stored only as fingerprints. Selfies are kept in private storage and deleted
+Connections to our servers are encrypted. Contact numbers from "Hide from contacts"
+are stored only as fingerprints. Selfies are kept in private storage and deleted
 after review. No system is perfectly secure, and we will tell you and the
 authorities if a breach affects your information, as the law requires.
 
