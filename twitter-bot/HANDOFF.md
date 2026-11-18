@@ -147,4 +147,9 @@ Found, not fixed:
 
 - Selling a follow-automation tool breaks X's automation rules; buyers' accounts can be locked.
 - The logo contains X's trademark.
-- Paddle reviews products before live selling and may decline this one. Not checked.
+- Paddle live, checked 2026-11-18: Paddle's "what am I not allowed to sell" page prohibits
+  "Automated Social Media Marketing, including but not limited to those that purport to
+  increase/ optimize engagement" and products that enable infringement of trademarks or
+  terms and conditions. Auto Follow fits both. Nothing was submitted to the live account,
+  which also carries macroom.app and webyz.io. The Add domain form also requires terms of
+  service, a privacy notice and a refund policy on the site; none exist for Auto Follow.
