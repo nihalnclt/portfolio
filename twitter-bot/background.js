@@ -24,6 +24,7 @@ async function getState() {
   return {
     mode: s.mode === 'unfollow' ? 'unfollow' : 'follow',
     target: s.target || '',
+    targets: Array.isArray(s.targets) && s.targets.length ? s.targets : s.target ? [s.target] : [],
     listType: s.listType === 'following' ? 'following' : 'followers',
     onlyNonFollowers: s.onlyNonFollowers !== false,
     filters: { verifiedOnly: false, skipProtected: false, requireBio: false, requireAvatar: false, activeDays: 0, ...s.filters },
@@ -200,7 +201,10 @@ async function actNext(mode, attempted, onlyNonFollowers, filters, pickOnly) {
   for (let i = 0; i < 40; i++) {
     if (/\/(login|i\/flow)/.test(location.pathname)) return { status: 'not_logged_in' };
 
-    const cells = document.querySelectorAll('[data-testid="UserCell"]');
+    // Only the list in the main column. X's right sidebar ("Who to follow") uses the same
+    // row markup and must never be acted on.
+    const list = document.querySelector('[data-testid="primaryColumn"]') || document;
+    const cells = list.querySelectorAll('[data-testid="UserCell"]');
     if (cells.length) sawCells = true;
     for (const cell of cells) {
       const btn = cell.querySelector(`button[data-testid$="${from}"]`);
@@ -370,8 +374,10 @@ async function tick() {
     if (!state.running) return;
     const cfg = state.settings;
 
-    // Safety net: if the worker dies mid-run, this alarm restarts the loop.
-    await schedule(cfg.errorPauseMin);
+    // Safety net: if the worker dies mid-run, this alarm restarts the loop. It is not the
+    // next action, so nextAt is cleared and the pages show "Working" instead of a countdown.
+    await chrome.alarms.create(ALARM, { delayInMinutes: Math.max(0.5, cfg.errorPauseMin) });
+    await set({ nextAt: 0 });
 
     let { dayCount, sinceCooldown } = state;
     if (state.day !== today()) {
@@ -396,7 +402,17 @@ async function tick() {
     }
 
     if (res.status === 'not_logged_in') return void (await stop('stopped_not_logged_in'));
-    if (res.status === 'list_end') return void (await stop('list_finished'));
+    if (res.status === 'list_end') {
+      // Follow mode with several targets: move on to the next account instead of stopping.
+      const at = state.targets.findIndex((t) => t.toLowerCase() === state.target.toLowerCase());
+      const nextTarget = state.mode === 'follow' ? state.targets[at + 1] : undefined;
+      if (!nextTarget) return void (await stop('list_finished'));
+      await addLog(state.target, 'list_finished');
+      await set({ target: nextTarget, profile: null });
+      await addLog(nextTarget, 'next_target');
+      await schedule(0.5);
+      return;
+    }
     if (res.status === 'no_match_yet') {
       await addLog('', 'no_match_yet_scrolling_on');
       await schedule(1);

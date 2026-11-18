@@ -105,6 +105,7 @@
       .row:hover { background: var(--surface); }
       .row .ctl { display: flex; align-items: center; gap: 6px; color: var(--muted); flex: none; }
       .note { padding: 4px 16px 0; font-size: 13px; color: var(--muted); }
+      .field .hint { margin-top: 4px; font-size: 12px; color: var(--muted); }
 
       .cta { padding: 14px 16px 16px; }
 
@@ -179,8 +180,9 @@
 
     <div class="pane on" id="pane-follow">
       <div class="field">
-        <label for="target">Target account</label>
-        <div class="in"><span>@</span><input id="target" placeholder="username" autocomplete="off" spellcheck="false" /></div>
+        <label for="target">Target accounts</label>
+        <div class="in"><span>@</span><input id="target" placeholder="username, another, another" autocomplete="off" spellcheck="false" /></div>
+        <div class="hint">Add several, separated by commas. When one list ends, the next account starts.</div>
       </div>
 
       <div class="h">Follow their</div>

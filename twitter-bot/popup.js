@@ -13,6 +13,7 @@ const FIELDS = [
 // DEFAULTS, send, loadState and openDashboard come from state.js.
 const FILTERS = ['verifiedOnly', 'requireAvatar', 'requireBio', 'skipProtected'];
 
+const MAX_TARGETS = 20;
 const cleanHandle = (v) =>
   v.trim().replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, '').replace(/^@/, '').split(/[/?#]/)[0];
 
@@ -58,7 +59,7 @@ function syncRange(changedId) {
 
 function render(state, fillInputs) {
   if (fillInputs) {
-    $('target').value = state.target;
+    $('target').value = state.targets.join(', ');
     document.querySelector(`input[name=list][value=${state.listType}]`).checked = true;
     document.querySelector(`input[name=unfollowWho][value="${state.onlyNonFollowers ? 1 : 0}"]`).checked = true;
     for (const id of FILTERS) $(id).checked = !!state.filters[id];
@@ -75,7 +76,9 @@ function render(state, fillInputs) {
   $('next').textContent =
     state.running && state.nextAt
       ? `Next action around ${new Date(state.nextAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-      : '';
+      : state.running
+        ? 'Working on the next action now'
+        : '';
   // Plan and account (Pro tab)
   const acct = state.account;
   $('acctOut').hidden = !!acct;
@@ -136,15 +139,21 @@ for (const btn of document.querySelectorAll('.stepper .arrows button')) {
 }
 
 $('startFollow').addEventListener('click', async () => {
-  const target = cleanHandle($('target').value);
-  if (!/^[A-Za-z0-9_]{1,15}$/.test(target)) {
-    $('status').textContent = 'Enter a valid username.';
+  // One or more usernames or profile links, separated by commas, spaces or new lines.
+  const seen = new Set();
+  const targets = $('target')
+    .value.split(/[\s,]+/)
+    .map(cleanHandle)
+    .filter((t) => t && !seen.has(t.toLowerCase()) && seen.add(t.toLowerCase()));
+  if (!targets.length || targets.length > MAX_TARGETS || !targets.every((t) => /^[A-Za-z0-9_]{1,15}$/.test(t))) {
+    $('status').textContent = targets.length > MAX_TARGETS ? `Enter at most ${MAX_TARGETS} usernames.` : 'Enter a valid username.';
     return;
   }
   await saveSettings();
   await chrome.storage.local.set({
     mode: 'follow',
-    target,
+    target: targets[0],
+    targets,
     listType: document.querySelector('input[name=list]:checked').value,
     filters: {
       ...Object.fromEntries(FILTERS.map((id) => [id, $(id).checked])),

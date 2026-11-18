@@ -16,6 +16,7 @@ async function loadState() {
     cap: effectiveCap(settings, account),
     mode: s.mode === 'unfollow' ? 'unfollow' : 'follow',
     target: s.target || '',
+    targets: Array.isArray(s.targets) && s.targets.length ? s.targets : s.target ? [s.target] : [],
     listType: s.listType === 'following' ? 'following' : 'followers',
     onlyNonFollowers: s.onlyNonFollowers !== false,
     filters: { verifiedOnly: false, skipProtected: false, requireBio: false, requireAvatar: false, activeDays: 0, ...s.filters },

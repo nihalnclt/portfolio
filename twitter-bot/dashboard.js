@@ -70,6 +70,13 @@ function activityRow(e) {
   return row;
 }
 
+// "Account 2 of 5" when several targets are queued.
+function queueText() {
+  if (state.targets.length < 2) return '';
+  const at = state.targets.findIndex((t) => t.toLowerCase() === state.target.toLowerCase());
+  return ` Account ${at + 1} of ${state.targets.length}.`;
+}
+
 function render() {
   $('proBadge').hidden = !state.account?.pro;
   const unfollow = state.mode === 'unfollow';
@@ -97,7 +104,7 @@ function render() {
 
   $('what').textContent = unfollow
     ? `Unfollowing from your Following list${state.onlyNonFollowers ? ', only accounts that do not follow back' : ''}.`
-    : `Following this account's ${state.listType}.${filterText()}`;
+    : `Following this account's ${state.listType}.${filterText()}${queueText()}`;
 
   renderStatus();
   $('sub').textContent = `${state.dayCount} of ${state.cap} actions today`;
