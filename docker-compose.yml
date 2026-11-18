@@ -3,6 +3,8 @@ services:
     build: .
     container_name: portfolio
     restart: unless-stopped
+    # Auto Follow server settings. Not in git; copy .env.autofollow.example and fill it in.
+    env_file: .env.autofollow
     networks:
       - proxy
 

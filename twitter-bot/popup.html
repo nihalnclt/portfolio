@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="ui.css" />
+    <style>
+      body { width: 380px; }
+
+      header { display: flex; align-items: center; gap: 12px; padding: 12px 16px 4px; }
+      header img { width: 32px; height: 32px; display: block; }
+      header .title { font-size: 17px; font-weight: 800; line-height: 1.2; }
+      header .sub { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+
+      .pane { display: none; }
+      .pane.on { display: block; }
+      .pad { padding: 12px 16px; }
+
+      .h { padding: 14px 16px 6px; font-size: 13px; color: var(--muted); }
+
+      /* Outlined field with the label inside */
+      .field { margin: 14px 16px 0; padding: 6px 10px 8px; border: 1px solid var(--border); border-radius: 4px; }
+      .field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+      .field label { display: block; font-size: 13px; color: var(--muted); }
+      .field:focus-within label { color: var(--accent); }
+      .field .in { display: flex; align-items: center; font-size: 17px; }
+      .field .in span { color: var(--muted); }
+      .field input { flex: 1; min-width: 0; border: 0; padding: 2px 0 0 2px; outline: none; background: none; }
+
+      /* Radio buttons: a ring that fills with a blue dot when chosen */
+      .radios { display: flex; gap: 28px; padding: 2px 16px 0; }
+      .radio { display: inline-flex; align-items: center; gap: 10px; height: 32px; cursor: pointer; }
+      .radio input { position: absolute; opacity: 0; pointer-events: none; }
+      .radio i { width: 20px; height: 20px; flex: none; border-radius: 50%; border: 2px solid var(--border-strong); display: grid; place-items: center; transition: border-color 0.15s; }
+      .radio i::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); transform: scale(0); transition: transform 0.12s; }
+      .radio:hover i { border-color: var(--text); }
+      .radio input:checked + i { border-color: var(--accent); }
+      .radio input:checked + i::after { transform: scale(1); }
+      .radio input:focus-visible + i { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+      /* Filter chips: tap to turn a condition on */
+      .chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px; }
+      .chip { cursor: pointer; }
+      .chip input, .seg input { position: absolute; opacity: 0; pointer-events: none; }
+      .chip span {
+        display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: 999px;
+        border: 1px solid var(--border-strong); font-weight: 600; font-size: 14px; transition: background 0.15s, border-color 0.15s;
+      }
+      .chip span::before { content: '+'; color: var(--muted); font-weight: 400; }
+      .chip:hover span { background: rgba(239, 243, 244, 0.1); }
+      .chip input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .chip input:checked + span::before { content: '\2713'; color: #fff; font-weight: 700; }
+      .chip input:focus-visible + span, .seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+      /* Segmented control: one choice */
+      .seg { display: flex; margin: 0 16px; border: 1px solid var(--border-strong); border-radius: 999px; overflow: hidden; }
+      .seg label { flex: 1; cursor: pointer; }
+      .seg label + label { border-left: 1px solid var(--border); }
+      .seg span { display: flex; align-items: center; justify-content: center; height: 34px; font-size: 14px; font-weight: 600; color: var(--muted); transition: background 0.15s; }
+      .seg label:hover span { background: rgba(239, 243, 244, 0.1); }
+      .seg input:checked + span { background: var(--ink); color: var(--on-ink); }
+
+      /* Two-handle range slider (random interval) */
+      .range { padding: 14px 16px 12px; border-bottom: 1px solid var(--border); }
+      .range-head { display: flex; justify-content: space-between; gap: 12px; }
+      #rangeVal { color: var(--accent); font-weight: 700; white-space: nowrap; }
+      .dual { position: relative; height: 28px; margin-top: 8px; }
+      .rail { position: absolute; left: 9px; right: 9px; top: 12px; height: 4px; border-radius: 999px; background: var(--border-strong); }
+      #rangeFill { position: absolute; top: 0; height: 100%; border-radius: 999px; background: var(--accent); }
+      .dual input[type='range'] {
+        position: absolute; inset: 0; width: 100%; height: 28px; margin: 0; background: none;
+        -webkit-appearance: none; appearance: none; pointer-events: none; outline: none;
+      }
+      .dual input[type='range']::-webkit-slider-runnable-track { background: none; height: 28px; }
+      .dual input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none; appearance: none; pointer-events: auto; cursor: grab;
+        width: 18px; height: 18px; margin-top: 5px; border-radius: 50%;
+        background: var(--accent); border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--accent);
+      }
+      .dual input[type='range']:active::-webkit-slider-thumb { cursor: grabbing; box-shadow: 0 0 0 6px rgba(29, 155, 240, 0.25); }
+      .dual input[type='range']:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--text); }
+      .scale { display: flex; justify-content: space-between; padding: 0 9px; margin-top: 2px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+      .scale span { width: 0; display: flex; justify-content: center; }
+
+      /* Number box with attached up / down buttons */
+      .stepper { display: inline-flex; height: 38px; border: 1px solid var(--border-strong); border-radius: 8px; overflow: hidden; vertical-align: middle; }
+      .stepper:focus-within { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+      .stepper input[type='number'] { width: 50px; border: 0; border-radius: 0; background: none; padding: 0 4px; text-align: center; font-weight: 700; -moz-appearance: textfield; }
+      .stepper input::-webkit-inner-spin-button, .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+      .stepper .arrows { display: flex; flex-direction: column; width: 32px; background: var(--accent); }
+      .stepper .arrows button { flex: 1; display: grid; place-items: center; padding: 0; border: 0; background: none; cursor: pointer; }
+      .stepper .arrows button:hover { background: rgba(255, 255, 255, 0.2); }
+      .stepper .arrows button:active { background: rgba(0, 0, 0, 0.2); }
+      .stepper .arrows button::before { content: ''; width: 6px; height: 6px; border-left: 2px solid #fff; border-top: 2px solid #fff; }
+      .stepper .arrows .up::before { transform: translateY(2px) rotate(45deg); }
+      .stepper .arrows .down::before { transform: translateY(-2px) rotate(225deg); }
+      .stepper.wide { display: flex; }
+      .stepper.wide input[type='number'] { flex: 1; width: auto; text-align: left; padding-left: 14px; }
+
+      .sset { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+      .sset .lbl { margin-bottom: 8px; }
+      .sset.words { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+      /* Settings-style rows: text left, control right */
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 6px 16px; cursor: pointer; transition: background 0.15s; }
+      .row:hover { background: var(--surface); }
+      .row .ctl { display: flex; align-items: center; gap: 6px; color: var(--muted); flex: none; }
+      .note { padding: 4px 16px 0; font-size: 13px; color: var(--muted); }
+
+      .cta { padding: 14px 16px 16px; }
+
+      /* Pro tab */
+      .plans { margin: 14px 16px 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+      .plan-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 8px; padding: 11px 14px; }
+      .plan-row + .plan-row { border-top: 1px solid var(--border); }
+      .plan-row.head { background: var(--surface); font-weight: 700; font-size: 13px; }
+      .plan-row .free { color: var(--muted); }
+      .plan-row .pro { font-weight: 700; }
+      .price { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-top: 18px; }
+      .price b { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; }
+      .price span { color: var(--muted); }
+      .price-sub { text-align: center; font-size: 13px; color: var(--muted); }
+      .center { text-align: center; padding-top: 8px; }
+      .acct { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; font-size: 14px; }
+      #acctEmail { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .proactive { padding: 12px; border: 1px solid var(--ok); border-radius: 12px; text-align: center; font-weight: 700; color: var(--ok); }
+      #acctMsg { color: var(--bad); }
+      #acctMsg:empty { display: none; }
+      #capNote { color: var(--accent); }
+
+      footer { border-top: 1px solid var(--border); }
+      .status { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+      .status .txt { flex: 1; min-width: 0; }
+      #status { font-weight: 700; }
+      #next { font-size: 13px; color: var(--muted); }
+      #next:empty { display: none; }
+
+      /* Recent activity: closed by default, the summary line shows the latest entry */
+      #logbox { border-top: 1px solid var(--border); }
+      #logbox summary { display: flex; align-items: center; gap: 8px; padding: 10px 16px; cursor: pointer; list-style: none; font-size: 13px; transition: background 0.15s; }
+      #logbox summary::-webkit-details-marker { display: none; }
+      #logbox summary:hover { background: var(--surface); }
+      #logbox .lead { font-weight: 700; flex: none; }
+      #last { flex: 1; min-width: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
+      #last.bad { color: var(--bad); }
+      #logbox[open] #last { visibility: hidden; }
+      .chev { width: 7px; height: 7px; flex: none; margin: 0 2px 3px 4px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform 0.15s; }
+      #logbox[open] .chev { transform: rotate(225deg); margin-bottom: -3px; }
+      #log { max-height: 150px; overflow: auto; padding: 0 16px 10px; font-size: 13px; line-height: 1.75; color: var(--muted); font-variant-numeric: tabular-nums; }
+      #log div { display: flex; gap: 10px; white-space: nowrap; }
+      #log .t { flex: none; width: 62px; }
+      #log .w { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+      #log .s { flex: none; }
+      #log div.bad .s, #log div.bad .w { color: var(--bad); }
+      .credit { display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+      .credit a { color: var(--accent); }
+      .credit a:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="icons/icon128.png" alt="" />
+      <div>
+        <div class="title">Auto Follow</div>
+        <div class="sub"><span class="dot"></span><span id="status"></span></div>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <button data-pane="follow" class="on">Follow</button>
+      <button data-pane="unfollow">Unfollow</button>
+      <button data-pane="settings">Settings</button>
+      <button data-pane="pro">Pro</button>
+    </div>
+
+    <div class="pane on" id="pane-follow">
+      <div class="field">
+        <label for="target">Target account</label>
+        <div class="in"><span>@</span><input id="target" placeholder="username" autocomplete="off" spellcheck="false" /></div>
+      </div>
+
+      <div class="h">Follow their</div>
+      <div class="radios">
+        <label class="radio"><input type="radio" name="list" value="followers" checked /><i></i>Followers</label>
+        <label class="radio"><input type="radio" name="list" value="following" /><i></i>Following</label>
+      </div>
+
+      <div class="h">Only accounts that</div>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="verifiedOnly" /><span>Verified</span></label>
+        <label class="chip"><input type="checkbox" id="requireAvatar" /><span>Has a photo</span></label>
+        <label class="chip"><input type="checkbox" id="requireBio" /><span>Has a bio</span></label>
+        <label class="chip"><input type="checkbox" id="skipProtected" /><span>Not protected</span></label>
+      </div>
+
+      <div class="h">Posted within</div>
+      <div class="seg">
+        <label><input type="radio" name="active" value="0" checked /><span>Any time</span></label>
+        <label><input type="radio" name="active" value="7" /><span>7 days</span></label>
+        <label><input type="radio" name="active" value="30" /><span>30 days</span></label>
+        <label><input type="radio" name="active" value="90" /><span>90 days</span></label>
+      </div>
+      <input type="hidden" id="activeDays" value="0" />
+
+      <div class="cta"><button class="btn primary block large" id="startFollow">Start following</button></div>
+    </div>
+
+    <div class="pane" id="pane-unfollow">
+      <div class="pad muted" style="padding-bottom:4px">Unfollows accounts from your own Following list, one at a time.</div>
+      <div class="h">Who to unfollow</div>
+      <div class="radios">
+        <label class="radio"><input type="radio" name="unfollowWho" value="1" checked /><i></i>Not following me back</label>
+        <label class="radio"><input type="radio" name="unfollowWho" value="0" /><i></i>Everyone</label>
+      </div>
+      <div class="cta"><button class="btn primary block large" id="startUnfollow">Start unfollowing</button></div>
+    </div>
+
+    <div class="pane" id="pane-settings">
+      <div class="range">
+        <div class="range-head"><span>Random interval between actions</span><span id="rangeVal"></span></div>
+        <div class="dual">
+          <div class="rail"><div id="rangeFill"></div></div>
+          <input id="minMin" type="range" min="2" max="20" step="1" aria-label="Shortest interval in minutes" />
+          <input id="maxMin" type="range" min="2" max="20" step="1" aria-label="Longest interval in minutes" />
+        </div>
+        <div class="scale"><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span></div>
+      </div>
+      <div class="sset">
+        <div class="lbl">Daily follow / unfollow limit <span class="muted">(max 400)</span></div>
+        <div class="note" id="capNote" style="padding:0 0 8px" hidden></div>
+        <span class="stepper wide"><input id="dailyCap" type="number" min="1" max="400" /><span class="arrows"><button type="button" class="up" data-for="dailyCap" data-dir="1" aria-label="Increase"></button><button type="button" class="down" data-for="dailyCap" data-dir="-1" aria-label="Decrease"></button></span></span>
+      </div>
+      <div class="sset words">
+        <span>For every</span> <span class="stepper"><input id="batchSize" type="number" min="1" max="100" /><span class="arrows"><button type="button" class="up" data-for="batchSize" data-dir="1" aria-label="Increase"></button><button type="button" class="down" data-for="batchSize" data-dir="-1" aria-label="Decrease"></button></span></span> <span>users followed / unfollowed,</span>
+        <span>take a</span> <span class="stepper"><input id="cooldownMin" type="number" min="0" max="240" /><span class="arrows"><button type="button" class="up" data-for="cooldownMin" data-dir="1" aria-label="Increase"></button><button type="button" class="down" data-for="cooldownMin" data-dir="-1" aria-label="Decrease"></button></span></span> <span>minute cooldown</span>
+      </div>
+      <div class="sset words">
+        <span>If an action fails, pause for</span> <span class="stepper"><input id="errorPauseMin" type="number" min="5" max="720" /><span class="arrows"><button type="button" class="up" data-for="errorPauseMin" data-dir="1" aria-label="Increase"></button><button type="button" class="down" data-for="errorPauseMin" data-dir="-1" aria-label="Decrease"></button></span></span> <span>minutes before retrying</span>
+      </div>
+      <div class="note" style="padding-bottom:14px">The daily limit counts follows and unfollows together. Changes save as you make them and apply from the next action.</div>
+    </div>
+
+    <div class="pane" id="pane-pro">
+      <div class="plans">
+        <div class="plan-row head"><span>Feature</span><span>Free</span><span>Pro</span></div>
+        <div class="plan-row"><span>Auto follow</span><span class="free"></span><span class="pro"></span></div>
+        <div class="plan-row"><span>Auto unfollow</span><span class="free"></span><span class="pro"></span></div>
+      </div>
+      <div class="note">Follows and unfollows share one daily limit.</div>
+
+      <div class="price"><b id="price"></b><span>one-time payment</span></div>
+      <div class="price-sub">Pay once. No subscription.</div>
+
+      <div class="cta">
+        <div id="acctOut">
+          <button class="btn primary block large" id="signin">Sign in with Google</button>
+          <div class="note center">Sign in first so your purchase is linked to your Google account.</div>
+        </div>
+        <div id="acctIn" hidden>
+          <div class="acct"><span id="acctEmail"></span><button class="btn link" id="signout">Sign out</button></div>
+          <div id="isFree">
+            <button class="btn primary block large" id="buy">Get Pro</button>
+            <button class="btn link block" id="refresh">I have already paid, check again</button>
+          </div>
+          <div id="isPro" class="proactive" hidden>Pro is active on this account</div>
+        </div>
+        <div id="acctMsg" class="note center"></div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="status">
+        <div class="txt">
+          <div id="next"></div>
+        </div>
+        <button class="btn link" id="dash">Open dashboard</button>
+        <button class="btn danger" id="stop">Stop</button>
+      </div>
+      <details id="logbox" hidden>
+        <summary><span class="lead">Recent activity</span><span id="last"></span><span class="chev"></span></summary>
+        <div id="log"></div>
+      </details>
+      <div class="credit">
+        <span id="ver"></span>
+        <span>&copy; <span id="year"></span> <a href="https://nihaln.com" target="_blank" rel="noopener">nihaln.com</a></span>
+      </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="state.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

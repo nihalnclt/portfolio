@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "X Auto Follow",
+  "version": "0.3.0",
+  "description": "Follows the followers or following list of a given X account from your own logged-in session, at a random interval with a daily limit.",
+  "permissions": [
+    "storage",
+    "alarms",
+    "tabs",
+    "scripting",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://nihaln.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "X Auto Follow",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2TZXDmhA6ymKFgL42AerimgMe5l4Kjt0a7+O5CK+Rq66Qaootkgz5lqEqUTUkeDB6K48VbbpVZzXGNMq1t5zmXHP/PiI0a+hCVoeiyj6kn8D4bjJ30y7qci1ENQqQBb91b3QHv2kUJHEUklbVYW8DMJHhGUsCtsCPmz7SgdSxBv3ZKlCJs/I6CSsCUMLxEqsC7wVSmAC5wFL89MCUrO8kizEkvuk9bitx4z7a5Tcl0ohmWVrJC/srPBQAWdq2wIVGG519rAJOlAo+L/vg2Gsv32rZLS25mzs+9zRwlH3LIbC3ONK6tW4m4MWbHhRbjFw0ljRTtRWdAfc4LX/Be8kVwIDAQAB"
+}

@@ -1,0 +1,73 @@
+/* Shared styles for popup.html and dashboard.html.
+   Adapted from X's dark ("Lights out") look: pure black, hairline grey borders,
+   white pill buttons, blue accent, underlined tabs. */
+:root {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #16181c;
+  --hover: #080808;
+  --border: #2f3336;
+  --border-strong: #536471;
+  --text: #e7e9ea;
+  --muted: #71767b;
+  --accent: #1d9bf0;
+  --ink: #eff3f4; /* primary pill button */
+  --on-ink: #0f1419;
+  --ok: #00ba7c;
+  --bad: #f4212e;
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.35 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+button, input { font: inherit; color: inherit; }
+a { color: inherit; text-decoration: none; }
+.muted { color: var(--muted); }
+
+/* Pill buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 36px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--border-strong); background: transparent; color: var(--text);
+  font-weight: 700; font-size: 15px; cursor: pointer; transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn:hover { background: rgba(239, 243, 244, 0.1); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--on-ink); }
+.btn.primary:hover { background: #d7dbdc; }
+.btn.danger:hover { background: rgba(244, 33, 46, 0.1); border-color: #67070f; color: var(--bad); }
+.btn.block { width: 100%; }
+.btn.large { min-height: 46px; font-size: 16px; }
+.btn.link { border: 0; min-height: 0; padding: 4px 8px; color: var(--accent); font-weight: 400; }
+.btn.link:hover { background: none; text-decoration: underline; }
+.btn:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Tab bar with an underline on the active tab */
+.tabs { display: flex; border-bottom: 1px solid var(--border); }
+.tabs button {
+  flex: 1; position: relative; height: 48px; border: 0; background: none;
+  color: var(--muted); font-weight: 500; cursor: pointer; transition: background 0.15s;
+}
+.tabs button:hover { background: rgba(231, 233, 234, 0.1); }
+.tabs button.on { color: var(--text); font-weight: 700; }
+.tabs button.on::after {
+  content: ''; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+  width: 56px; height: 4px; border-radius: 999px; background: var(--accent);
+}
+
+input[type='checkbox'] { accent-color: var(--accent); width: 18px; height: 18px; margin: 0; flex: none; }
+input[type='number'] {
+  width: 60px; padding: 5px 6px; text-align: center;
+  border: 1px solid var(--border); border-radius: 4px; background: var(--bg); outline: none;
+}
+input[type='number']:focus { border-color: var(--accent); }
+
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+.running .dot { background: var(--ok); }
