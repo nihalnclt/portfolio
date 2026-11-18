@@ -17,6 +17,14 @@ async function loadState() {
     mode: s.mode === 'unfollow' ? 'unfollow' : 'follow',
     target: s.target || '',
     targets: Array.isArray(s.targets) && s.targets.length ? s.targets : s.target ? [s.target] : [],
+    keywords: Array.isArray(s.keywords) ? s.keywords : [],
+    sources:
+      Array.isArray(s.sources) && s.sources.length
+        ? s.sources
+        : s.target
+          ? [{ kind: 'list', handle: s.target, list: s.listType === 'following' ? 'following' : 'followers' }]
+          : [],
+    sourceIndex: Number.isInteger(s.sourceIndex) ? s.sourceIndex : 0,
     listType: s.listType === 'following' ? 'following' : 'followers',
     onlyNonFollowers: s.onlyNonFollowers !== false,
     filters: { verifiedOnly: false, skipProtected: false, requireBio: false, requireAvatar: false, activeDays: 0, ...s.filters },

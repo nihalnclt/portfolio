@@ -70,20 +70,22 @@ function activityRow(e) {
   return row;
 }
 
-// "Account 2 of 5" when several targets are queued.
+// "Source 2 of 5" when several lists or searches are queued.
 function queueText() {
-  if (state.targets.length < 2) return '';
-  const at = state.targets.findIndex((t) => t.toLowerCase() === state.target.toLowerCase());
-  return ` Account ${at + 1} of ${state.targets.length}.`;
+  if (state.sources.length < 2) return '';
+  return ` Source ${Math.min(state.sourceIndex, state.sources.length - 1) + 1} of ${state.sources.length}.`;
 }
 
 function render() {
   $('proBadge').hidden = !state.account?.pro;
   const unfollow = state.mode === 'unfollow';
-  const handle = unfollow ? state.myHandle : state.target;
+  const src = unfollow ? null : state.sources[state.sourceIndex] || state.sources[0] || null;
+  const search = src && src.kind === 'search' ? src.q : '';
+  const handle = unfollow ? state.myHandle : search ? '' : state.target;
   const prof = state.profile && handle && state.profile.handle === handle.toLowerCase() ? state.profile : null;
 
-  $('who').textContent = prof?.name || (handle ? '@' + handle : unfollow ? 'Your account' : 'No target set');
+  $('who').textContent =
+    prof?.name || (handle ? '@' + handle : unfollow ? 'Your account' : search ? `Search: ${search}` : 'No target set');
   $('handle').textContent = prof?.name && handle ? '@' + handle : '';
   $('initial').textContent = handle ? handle.charAt(0) : '';
   if (prof?.avatar && /^https:\/\/[a-z0-9-]+\.twimg\.com\//.test(prof.avatar)) {
@@ -104,7 +106,9 @@ function render() {
 
   $('what').textContent = unfollow
     ? `Unfollowing from your Following list${state.onlyNonFollowers ? ', only accounts that do not follow back' : ''}.`
-    : `Following this account's ${state.listType}.${filterText()}${queueText()}`;
+    : search
+      ? `Following people from X's People search.${filterText()}${queueText()}`
+      : `Following this account's ${src ? src.list : state.listType}.${filterText()}${queueText()}`;
 
   renderStatus();
   $('sub').textContent = `${state.dayCount} of ${state.cap} actions today`;

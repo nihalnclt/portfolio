@@ -183,6 +183,21 @@ still uses the old path keeps working. Earlier sections of this file show the ol
 - Paddle leftovers still exist: sandbox and live products, API keys and tokens in the
   Paddle account, and `.env.autofollow.live` on the owner's machine with the live Paddle key.
 
+## Follow sources, 2026-11-18
+
+- Measured on X with the owner's login: a followers list stops at 50 accounts and a
+  following list at about 48. X's own page requests the followers list once, receives 50
+  accounts, and does not request a second page when scrolled to the end. A direct
+  "next page" request was not sent, so a server-side cap is likely but not proven.
+- People search (`/search?q=...&f=user`) uses the same row layout and loaded 300 accounts
+  for one keyword without reaching an end.
+- The extension now works through a queue of sources: for each target account its chosen
+  list, then its other list, then each People search keyword. It logs `finished ...` and
+  `next: ...` when it moves on, and stops with `list_finished` after the last source.
+- It clicks X's Retry button when a list fails to load, and acts only on rows in the main
+  column (the "Who to follow" sidebar uses the same markup).
+- None of this has been run inside the extension in Chrome yet.
+
 ## Open risks the owner has been told about
 
 - Selling a follow-automation tool breaks X's automation rules; buyers' accounts can be locked.

@@ -14,6 +14,7 @@ const FIELDS = [
 const FILTERS = ['verifiedOnly', 'requireAvatar', 'requireBio', 'skipProtected'];
 
 const MAX_TARGETS = 20;
+const MAX_KEYWORDS = 10;
 const cleanHandle = (v) =>
   v.trim().replace(/^https?:\/\/(www\.)?(x|twitter)\.com\//i, '').replace(/^@/, '').split(/[/?#]/)[0];
 
@@ -60,6 +61,7 @@ function syncRange(changedId) {
 function render(state, fillInputs) {
   if (fillInputs) {
     $('target').value = state.targets.join(', ');
+    $('keywords').value = state.keywords.join(', ');
     document.querySelector(`input[name=list][value=${state.listType}]`).checked = true;
     document.querySelector(`input[name=unfollowWho][value="${state.onlyNonFollowers ? 1 : 0}"]`).checked = true;
     for (const id of FILTERS) $(id).checked = !!state.filters[id];
@@ -145,16 +147,44 @@ $('startFollow').addEventListener('click', async () => {
     .value.split(/[\s,]+/)
     .map(cleanHandle)
     .filter((t) => t && !seen.has(t.toLowerCase()) && seen.add(t.toLowerCase()));
-  if (!targets.length || targets.length > MAX_TARGETS || !targets.every((t) => /^[A-Za-z0-9_]{1,15}$/.test(t))) {
-    $('status').textContent = targets.length > MAX_TARGETS ? `Enter at most ${MAX_TARGETS} usernames.` : 'Enter a valid username.';
+  // People-search phrases, separated by commas or new lines (a phrase can contain spaces).
+  const seenK = new Set();
+  const keywords = $('keywords')
+    .value.split(/[,\n]+/)
+    .map((k) => k.trim().replace(/\s+/g, ' ').slice(0, 60))
+    .filter((k) => k && !seenK.has(k.toLowerCase()) && seenK.add(k.toLowerCase()));
+  const problem = !targets.length && !keywords.length
+    ? 'Enter a username or a search keyword.'
+    : targets.length > MAX_TARGETS
+      ? `Enter at most ${MAX_TARGETS} usernames.`
+      : keywords.length > MAX_KEYWORDS
+        ? `Enter at most ${MAX_KEYWORDS} keywords.`
+        : !targets.every((t) => /^[A-Za-z0-9_]{1,15}$/.test(t))
+          ? 'Enter a valid username.'
+          : '';
+  if (problem) {
+    $('status').textContent = problem;
     return;
   }
+  // The order the run works through: each account's chosen list, then its other list, then the searches.
+  const listType = document.querySelector('input[name=list]:checked').value;
+  const other = listType === 'followers' ? 'following' : 'followers';
+  const sources = [
+    ...targets.flatMap((handle) => [
+      { kind: 'list', handle, list: listType },
+      { kind: 'list', handle, list: other },
+    ]),
+    ...keywords.map((q) => ({ kind: 'search', q })),
+  ];
   await saveSettings();
   await chrome.storage.local.set({
     mode: 'follow',
-    target: targets[0],
+    target: targets[0] || '',
     targets,
-    listType: document.querySelector('input[name=list]:checked').value,
+    keywords,
+    sources,
+    sourceIndex: 0,
+    listType,
     filters: {
       ...Object.fromEntries(FILTERS.map((id) => [id, $(id).checked])),
       activeDays: Math.min(365, Math.max(0, Math.round(Number($('activeDays').value)) || 0)),

@@ -182,10 +182,15 @@
       <div class="field">
         <label for="target">Target accounts</label>
         <div class="in"><span>@</span><input id="target" placeholder="username, another, another" autocomplete="off" spellcheck="false" /></div>
-        <div class="hint">Add several, separated by commas. When one list ends, the next account starts.</div>
+        <div class="hint">Add several, separated by commas. Each account's followers and following lists are both used.</div>
+      </div>
+      <div class="field">
+        <label for="keywords">People search keywords</label>
+        <div class="in"><input id="keywords" placeholder="indie hacker, saas founder" autocomplete="off" spellcheck="false" /></div>
+        <div class="hint">Optional. Follows people from X's People search, after the accounts above.</div>
       </div>
 
-      <div class="h">Follow their</div>
+      <div class="h">Start with their</div>
       <div class="radios">
         <label class="radio"><input type="radio" name="list" value="followers" checked /><i></i>Followers</label>
         <label class="radio"><input type="radio" name="list" value="following" /><i></i>Following</label>

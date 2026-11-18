@@ -25,6 +25,14 @@ async function getState() {
     mode: s.mode === 'unfollow' ? 'unfollow' : 'follow',
     target: s.target || '',
     targets: Array.isArray(s.targets) && s.targets.length ? s.targets : s.target ? [s.target] : [],
+    // Follow mode works through these in order: each target's two lists, then each people search.
+    sources:
+      Array.isArray(s.sources) && s.sources.length
+        ? s.sources
+        : s.target
+          ? [{ kind: 'list', handle: s.target, list: s.listType === 'following' ? 'following' : 'followers' }]
+          : [],
+    sourceIndex: Number.isInteger(s.sourceIndex) ? s.sourceIndex : 0,
     listType: s.listType === 'following' ? 'following' : 'followers',
     onlyNonFollowers: s.onlyNonFollowers !== false,
     filters: { verifiedOnly: false, skipProtected: false, requireBio: false, requireAvatar: false, activeDays: 0, ...s.filters },
@@ -86,6 +94,10 @@ function waitForLoad(tabId, timeoutMs = 30000) {
   });
 }
 
+const isSearch = (u) => /^https:\/\/x\.com\/search\?/i.test(u);
+const searchQuery = (u) => (new URL(u).searchParams.get('q') || '').trim().toLowerCase();
+const sourceLabel = (src) => (src.kind === 'search' ? `search: ${src.q}` : `@${src.handle} ${src.list}`);
+
 // Reuse the worker tab so the list keeps its scroll position between actions.
 async function openTab(url, exact = false) {
   const { tabId } = await getState();
@@ -94,7 +106,10 @@ async function openTab(url, exact = false) {
       const t = await chrome.tabs.get(tabId);
       const have = (t.url || '').toLowerCase().replace(/[?#].*$/, '').replace(/\/$/, '');
       const want = url.toLowerCase();
-      if (exact ? have === want : have.startsWith(want)) return t.id;
+      if (isSearch(url)) {
+        // Search pages differ only in their query, which the comparison above drops.
+        if (isSearch(t.url || '') && searchQuery(t.url) === searchQuery(url)) return t.id;
+      } else if (exact ? have === want : have.startsWith(want)) return t.id;
       await chrome.tabs.update(t.id, { url });
       await waitForLoad(t.id);
       return t.id;
@@ -206,6 +221,15 @@ async function actNext(mode, attempted, onlyNonFollowers, filters, pickOnly) {
     const list = document.querySelector('[data-testid="primaryColumn"]') || document;
     const cells = list.querySelectorAll('[data-testid="UserCell"]');
     if (cells.length) sawCells = true;
+    else {
+      // X sometimes fails to load a list and shows a Retry button instead.
+      const retry = [...list.querySelectorAll('button')].find((b) => /^retry$/i.test((b.innerText || '').trim()));
+      if (retry) {
+        retry.click();
+        await sleep(3000);
+        continue;
+      }
+    }
     for (const cell of cells) {
       const btn = cell.querySelector(`button[data-testid$="${from}"]`);
       const handle = btn && handleOf(btn);
@@ -310,10 +334,20 @@ const MAX_CHECKS_PER_RUN = 5;
 const SKIP = { inactive: 'skipped_inactive', already_following: 'skipped_already_following', no_follow_button: 'skipped_no_follow_button' };
 
 async function runAction(state) {
-  let owner = state.target;
-  // X has a dedicated verified followers list; use it when filtering for verified.
-  const list = state.listType === 'followers' && state.filters.verifiedOnly ? 'verified_followers' : state.listType;
-  let url = `https://x.com/${state.target}/${list}`;
+  const src = state.sources[state.sourceIndex] || state.sources[0];
+  let owner = '';
+  let url = '';
+  if (state.mode !== 'unfollow') {
+    if (!src) return { status: 'no_target' };
+    if (src.kind === 'search') {
+      url = `https://x.com/search?q=${encodeURIComponent(src.q)}&f=user`;
+    } else {
+      owner = src.handle;
+      // X has a dedicated verified followers list; use it when filtering for verified.
+      const list = src.list === 'followers' && state.filters.verifiedOnly ? 'verified_followers' : src.list;
+      url = `https://x.com/${src.handle}/${list}`;
+    }
+  }
   if (state.mode === 'unfollow') {
     let me = state.myHandle;
     if (!me) {
@@ -328,7 +362,7 @@ async function runAction(state) {
   }
 
   // Once per start: load the profile page to show avatar and counts on the dashboard.
-  if (state.profile?.handle !== owner.toLowerCase()) {
+  if (owner && state.profile?.handle !== owner.toLowerCase()) {
     let profile = null;
     try {
       const profTab = await openTab(`https://x.com/${owner}`, true);
@@ -402,16 +436,19 @@ async function tick() {
     }
 
     if (res.status === 'not_logged_in') return void (await stop('stopped_not_logged_in'));
-    if (res.status === 'list_end') {
-      // Follow mode with several targets: move on to the next account instead of stopping.
-      const at = state.targets.findIndex((t) => t.toLowerCase() === state.target.toLowerCase());
-      const nextTarget = state.mode === 'follow' ? state.targets[at + 1] : undefined;
-      if (!nextTarget) return void (await stop('list_finished'));
-      await addLog(state.target, 'list_finished');
-      await set({ target: nextTarget, profile: null });
-      await addLog(nextTarget, 'next_target');
-      await schedule(0.5);
-      return;
+    if (res.status === 'list_end' || res.status === 'no_users_found') {
+      // Follow mode: move on to the next list, account or search instead of stopping.
+      const next = state.mode === 'follow' ? state.sources[state.sourceIndex + 1] : undefined;
+      const here = state.sources[state.sourceIndex];
+      if (!next) {
+        if (res.status === 'list_end') return void (await stop('list_finished'));
+      } else {
+        await addLog('', `finished ${sourceLabel(here)}`);
+        await set({ sourceIndex: state.sourceIndex + 1, target: next.kind === 'search' ? '' : next.handle, profile: null });
+        await addLog('', `next: ${sourceLabel(next)}`);
+        await schedule(0.5);
+        return;
+      }
     }
     if (res.status === 'no_match_yet') {
       await addLog('', 'no_match_yet_scrolling_on');
