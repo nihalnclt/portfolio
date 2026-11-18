@@ -151,6 +151,38 @@ Everything moved from `/autofollow` to `/x-autofollow` at the owner's request: t
 The old `/autofollow/...` paths redirect to the new ones, so a checkout URL setting that
 still uses the old path keeps working. Earlier sections of this file show the old path.
 
+## Paddle live, 2026-11-18
+
+- Owner chose to proceed with Paddle despite the policy finding below.
+- Created in the live account: product "Auto Follow Pro" `pro_01m7q5176kndt7qm2pwpmvnnyw`,
+  price $9.99 USD one-time `pri_01m7q52k0g9ba0z308rx6kaqsp` (maximum quantity 1), API key
+  "autofollow live" (Customers and Transactions read and write, expires 2027-02-16) and
+  client-side token "autofollow live". All live settings are in `.env.autofollow.live`
+  (git-ignored, local only).
+- nihaln.com was submitted for website approval and rejected the same day. Paddle's reason:
+  the domain was classified as a personal website and blog, which it does not support. The
+  email says the rest of the account is unaffected and that the decision can be appealed
+  or a different domain submitted.
+- The server still runs on sandbox credentials. Do not switch to production until a domain
+  is approved.
+
+## Switched from Paddle to Creem, 2026-11-18
+
+- Owner dropped Paddle after the domain rejection and asked for Creem (store
+  "X autofollow", identity check "In review" at the time).
+- `src/lib/autofollow.ts` now calls Creem. The Paddle checkout page is gone; Creem hosts
+  the checkout and returns the buyer to `/x-autofollow/success`. See `SERVER.md`.
+- The refund policy page was removed at the owner's request. The terms say Creem handles
+  refunds as Merchant of Record.
+- Creem test mode: product "Auto Follow Pro" `prod_2SPmgqy0dMxhGdEYRzMrFy` ($9.99
+  one-time, tax added on top) and API key "autofollow-server-test" with narrow
+  permissions. Both are in the local `.env.autofollow`.
+- Tested locally against Creem test mode: licence Free before purchase, checkout URL
+  created with the email locked, test-card payment completed, licence Pro afterwards,
+  second checkout answers 409, another email stays Free.
+- Paddle leftovers still exist: sandbox and live products, API keys and tokens in the
+  Paddle account, and `.env.autofollow.live` on the owner's machine with the live Paddle key.
+
 ## Open risks the owner has been told about
 
 - Selling a follow-automation tool breaks X's automation rules; buyers' accounts can be locked.

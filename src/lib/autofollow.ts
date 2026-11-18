@@ -1,5 +1,5 @@
 // Server-side helpers for the Auto Follow extension: Google sign-in, sessions, and
-// Paddle one-time purchase checks. No database: Paddle is the source of truth.
+// Creem one-time purchase checks. No database: Creem is the source of truth.
 // Uses only Node built-ins and fetch. Never import this from a client component.
 import { createHmac, timingSafeEqual } from "node:crypto";
 
@@ -9,8 +9,8 @@ function env(name: string): string {
   return v;
 }
 
-const PADDLE_BASE = () =>
-  process.env.PADDLE_ENV === "production" ? "https://api.paddle.com" : "https://sandbox-api.paddle.com";
+const CREEM_BASE = () =>
+  process.env.CREEM_ENV === "production" ? "https://api.creem.io" : "https://test-api.creem.io";
 
 // ---------- Sessions (signed, stateless) ----------
 
@@ -55,12 +55,12 @@ export async function verifyGoogleIdToken(idToken: string, nonce: string): Promi
   return typeof t.email === "string" ? t.email.toLowerCase() : null;
 }
 
-// ---------- Paddle ----------
+// ---------- Creem ----------
 
-async function paddle(path: string, init?: { method?: string; body?: unknown }) {
-  const res = await fetch(PADDLE_BASE() + path, {
+async function creem(path: string, init?: { method?: string; body?: unknown }) {
+  const res = await fetch(CREEM_BASE() + path, {
     method: init?.method || "GET",
-    headers: { Authorization: `Bearer ${env("PADDLE_API_KEY")}`, "Content-Type": "application/json" },
+    headers: { "x-api-key": env("CREEM_API_KEY"), "Content-Type": "application/json" },
     body: init?.body ? JSON.stringify(init.body) : undefined,
     cache: "no-store",
   });
@@ -68,64 +68,56 @@ async function paddle(path: string, init?: { method?: string; body?: unknown }) 
   return { ok: res.ok, status: res.status, json };
 }
 
-async function customerIds(email: string): Promise<string[]> {
-  const r = await paddle("/customers?email=" + encodeURIComponent(email));
-  if (!r.ok) throw new Error(`Paddle customers lookup failed (${r.status})`);
-  return (r.json.data || []).map((c: { id: string }) => c.id);
+/** The Creem customer id for this email, or null if they have never checked out. */
+async function customerId(email: string): Promise<string | null> {
+  const r = await creem("/v1/customers?email=" + encodeURIComponent(email));
+  if (r.status === 404) return null;
+  if (!r.ok) throw new Error(`Creem customer lookup failed (${r.status})`);
+  return typeof r.json.id === "string" ? r.json.id : null;
 }
 
-type PaddleTx = {
-  items?: { price?: { product_id?: string } }[];
-  details?: { totals?: { grand_total?: string } };
-  adjustments_totals?: { breakdown?: { refund?: string; chargeback?: string } };
-};
+type CreemOrder = { id: string; product?: string | { id?: string }; status?: string };
+type CreemTx = { order?: string | null; status?: string };
 
-/** True if the whole amount paid has been refunded or charged back. Partial refunds (tax, goodwill) keep Pro. */
-function fullyRefunded(tx: PaddleTx): boolean {
-  const paid = Number(tx.details?.totals?.grand_total || 0);
-  const b = tx.adjustments_totals?.breakdown;
-  const returned = Number(b?.refund || 0) + Number(b?.chargeback || 0);
-  return returned > 0 && returned >= paid;
-}
+// A payment that still stands. Refunded and charged back payments are left out;
+// a partial refund (tax, goodwill) keeps Pro.
+const STANDING = new Set(["paid", "partialRefund"]);
 
-/** True if any Paddle customer with this email has a paid, not fully refunded transaction for the Pro product. */
+/** True if this email has a paid, not refunded order for the Pro product. */
 export async function hasPro(email: string): Promise<boolean> {
-  const productId = env("PADDLE_PRODUCT_ID");
-  for (const id of await customerIds(email)) {
-    const r = await paddle(
-      `/transactions?customer_id=${id}&status=completed,paid&per_page=30&include=adjustments_totals`,
-    );
-    if (!r.ok) throw new Error(`Paddle transactions lookup failed (${r.status})`);
-    for (const tx of (r.json.data || []) as PaddleTx[]) {
-      if (fullyRefunded(tx)) continue;
-      for (const item of tx.items || []) {
-        if (item.price?.product_id === productId) return true;
-      }
-    }
-  }
-  return false;
+  const productId = env("CREEM_PRODUCT_ID");
+  const id = await customerId(email);
+  if (!id) return false;
+
+  const orders = await creem(`/v1/customers/${id}/orders?page_size=50`);
+  if (!orders.ok) throw new Error(`Creem orders lookup failed (${orders.status})`);
+  const proOrders = new Set(
+    ((orders.json.items || []) as CreemOrder[])
+      .filter((o) => (typeof o.product === "string" ? o.product : o.product?.id) === productId)
+      .map((o) => o.id),
+  );
+  if (proOrders.size === 0) return false;
+
+  const txs = await creem(`/v1/transactions/search?customer_id=${id}&page_size=50`);
+  if (!txs.ok) throw new Error(`Creem transactions lookup failed (${txs.status})`);
+  return ((txs.json.items || []) as CreemTx[]).some(
+    (t) => !!t.order && proOrders.has(t.order) && STANDING.has(t.status || ""),
+  );
 }
 
-/** Creates a Paddle transaction for this email and returns its checkout URL. */
+/** Creates a Creem checkout for this email and returns its hosted checkout URL. */
 export async function createCheckoutUrl(email: string): Promise<string> {
-  let [customerId] = await customerIds(email);
-  if (!customerId) {
-    const created = await paddle("/customers", { method: "POST", body: { email } });
-    if (!created.ok) throw new Error(`Paddle customer create failed (${created.status})`);
-    customerId = created.json.data.id;
-  }
-  const tx = await paddle("/transactions", {
+  const r = await creem("/v1/checkouts", {
     method: "POST",
     body: {
-      items: [{ price_id: env("PADDLE_PRICE_ID"), quantity: 1 }],
-      customer_id: customerId,
-      // Per-transaction checkout page. This overrides the account's default payment link,
-      // which is shared with other products on the same Paddle account and must not change.
-      checkout: { url: env("AUTOFOLLOW_CHECKOUT_URL") },
+      product_id: env("CREEM_PRODUCT_ID"),
+      customer: { email },
+      success_url: process.env.AUTOFOLLOW_SUCCESS_URL || "https://nihaln.com/x-autofollow/success",
+      metadata: { email },
     },
   });
-  const url = tx.json?.data?.checkout?.url;
-  if (!tx.ok || !url) throw new Error(`Paddle transaction create failed (${tx.status})`);
+  const url = r.json?.checkout_url;
+  if (!r.ok || typeof url !== "string") throw new Error(`Creem checkout create failed (${r.status})`);
   return url;
 }
 

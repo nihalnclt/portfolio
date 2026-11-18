@@ -1,6 +1,6 @@
 ---
 title: "Auto Follow Terms of Service"
-description: "Terms for the Auto Follow browser extension: what it does, the risks of automating an X account, the Pro purchase, and refunds."
+description: "Terms for the Auto Follow browser extension: what it does, the risks of automating an X account, and the Pro purchase."
 ---
 
 Effective date: 18 November 2026
@@ -43,15 +43,17 @@ risk of X taking action against your account.
 
 ## 4. Payment
 
-Our order process is conducted by our online reseller Paddle.com. Paddle.com is
-the Merchant of Record for all our orders. Paddle provides all customer service
+Our order process is conducted by our online reseller Creem. Creem is
+the Merchant of Record for all our orders. Creem provides all customer service
 inquiries related to payment and handles returns. The price shown before you
 pay is in US dollars. Sales tax, VAT or GST may be added at checkout depending
 on your country.
 
 ## 5. Refunds
 
-See the [Refund Policy](/x-autofollow/refund).
+Creem, as Merchant of Record, handles refunds and returns for our orders. To ask
+about a refund, write to us at the address above. Nothing in these terms
+affects any rights you have under the consumer law of your country.
 
 ## 6. Acceptable use
 

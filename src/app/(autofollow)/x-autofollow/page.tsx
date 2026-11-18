@@ -60,11 +60,7 @@ export default function AutofollowPage() {
       </div>
       <p className="mt-3 text-[14px] text-[#71767b]">
         Prices are in US dollars. Tax may be added at checkout depending on your country. Pro is bought inside the
-        extension and payment is handled by Paddle. Full refund within 14 days, see the{" "}
-        <Link href="/x-autofollow/refund" className="text-[#1d9bf0] hover:underline">
-          refund policy
-        </Link>
-        .
+        extension and payment is handled by Creem.
       </p>
 
       <div className="mt-12 rounded-2xl border border-[#f5c518]/50 p-5">

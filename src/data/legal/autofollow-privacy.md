@@ -28,9 +28,9 @@ Google gives the extension a sign-in token, which our server checks with
 Google. From it we read your email address and nothing else. The server then
 gives the extension a signed session so it can ask whether your email has Pro.
 
-**If you buy Pro.** Paddle.com, our reseller and Merchant of Record, takes the
-payment. We never see your card details. Paddle holds your email, billing
-country and purchase record. When the extension asks, our server asks Paddle
+**If you buy Pro.** Creem, our reseller and Merchant of Record, takes the
+payment. We never see your card details. Creem holds your email, billing
+country and purchase record. When the extension asks, our server asks Creem
 whether your email has a paid, unrefunded Pro purchase.
 
 **Technical data.** Our server and our hosting and network providers keep
@@ -39,7 +39,7 @@ service. The checkout and information pages on nihaln.com use privacy-friendly
 website analytics that count page views.
 
 We do not keep a customer database of our own. Your Pro status is read from
-Paddle each time.
+Creem each time.
 
 ## What we do not do
 
@@ -49,13 +49,13 @@ messages, your posts or your browsing on other sites.
 ## Who processes your data
 
 - **Google**, to confirm who you are when you sign in.
-- **Paddle.com**, to take payment, issue receipts and handle tax and refunds.
+- **Creem**, to take payment, issue receipts and handle tax and refunds.
 - **Hosting and network providers**, which run the server and deliver the site.
 
 ## How long it is kept
 
 Data in your browser stays until you clear it or remove the extension. Server
-logs are kept for a short period. Paddle keeps purchase records for as long as
+logs are kept for a short period. Creem keeps purchase records for as long as
 tax and accounting law requires.
 
 ## Your choices
@@ -63,7 +63,7 @@ tax and accounting law requires.
 - Sign out in the extension's Pro tab to remove the session from your browser.
 - Remove the extension to delete everything it stored locally.
 - Email us to ask what we hold about you or to ask for it to be deleted. We
-  reply within 30 days. Purchase records held by Paddle are subject to Paddle's
+  reply within 30 days. Purchase records held by Creem are subject to Creem's
   own retention rules.
 
 ## Changes

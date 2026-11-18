@@ -4,7 +4,6 @@ import { siteConfig } from "@/data/site";
 const links = [
   { href: "/x-autofollow/terms", label: "Terms" },
   { href: "/x-autofollow/privacy", label: "Privacy" },
-  { href: "/x-autofollow/refund", label: "Refunds" },
 ];
 
 // Auto Follow has its own dark look, matching the extension, instead of the portfolio shell.

@@ -27,7 +27,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/x-autofollow",
     "/x-autofollow/terms",
     "/x-autofollow/privacy",
-    "/x-autofollow/refund",
   ].map((route) => ({
     url: `${siteConfig.siteUrl}${route}`,
     lastModified: new Date(),
