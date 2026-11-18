@@ -211,8 +211,15 @@ async function actNext(mode, attempted, onlyNonFollowers, filters, pickOnly) {
     return true;
   };
 
+  // X often fails to load a list, or its next page, and shows "Something went wrong" with a
+  // Retry button. That is not the end of the list.
+  const MAX_RETRIES = 6;
+  const retryBtn = (list) =>
+    [...list.querySelectorAll('button')].find((b) => /^retry$/i.test((b.innerText || '').trim()));
+
   let sawCells = false;
   let stuck = 0;
+  let retries = 0;
   for (let i = 0; i < 40; i++) {
     if (/\/(login|i\/flow)/.test(location.pathname)) return { status: 'not_logged_in' };
 
@@ -221,15 +228,6 @@ async function actNext(mode, attempted, onlyNonFollowers, filters, pickOnly) {
     const list = document.querySelector('[data-testid="primaryColumn"]') || document;
     const cells = list.querySelectorAll('[data-testid="UserCell"]');
     if (cells.length) sawCells = true;
-    else {
-      // X sometimes fails to load a list and shows a Retry button instead.
-      const retry = [...list.querySelectorAll('button')].find((b) => /^retry$/i.test((b.innerText || '').trim()));
-      if (retry) {
-        retry.click();
-        await sleep(3000);
-        continue;
-      }
-    }
     for (const cell of cells) {
       const btn = cell.querySelector(`button[data-testid$="${from}"]`);
       const handle = btn && handleOf(btn);
@@ -263,6 +261,18 @@ async function actNext(mode, attempted, onlyNonFollowers, filters, pickOnly) {
         if (mode === 'follow' && btnFor(handle, '-cancel')) return { status: 'requested', handle }; // protected account
       }
       return { status: 'clicked_unconfirmed', handle };
+    }
+
+    // No usable row on screen. If X is showing its load error, press Retry and look again.
+    const retry = retryBtn(list);
+    if (retry) {
+      if (retries >= MAX_RETRIES) return { status: 'list_load_failed' };
+      retries += 1;
+      retry.scrollIntoView({ block: 'center' });
+      retry.click();
+      await sleep(2000 + retries * 1500);
+      stuck = 0;
+      continue;
     }
 
     const before = window.scrollY;
