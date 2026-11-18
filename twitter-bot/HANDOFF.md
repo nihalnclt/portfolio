@@ -143,6 +143,14 @@ Found, not fixed:
   the activity filter opens profiles in background tabs, where X may load them slower or
   not at all.
 
+## Path change, 2026-11-18
+
+Everything moved from `/autofollow` to `/x-autofollow` at the owner's request: the API
+(`https://nihaln.com/x-autofollow/api`), the checkout page, and new public pages
+`/x-autofollow`, `/x-autofollow/terms`, `/x-autofollow/privacy` and `/x-autofollow/refund`.
+The old `/autofollow/...` paths redirect to the new ones, so a checkout URL setting that
+still uses the old path keeps working. Earlier sections of this file show the old path.
+
 ## Open risks the owner has been told about
 
 - Selling a follow-automation tool breaks X's automation rules; buyers' accounts can be locked.

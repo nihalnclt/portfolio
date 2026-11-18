@@ -7,10 +7,10 @@ The server code lives in the portfolio app: `src/lib/autofollow.ts` and
 
 | Path on nihaln.com | Purpose |
 | --- | --- |
-| `POST /autofollow/api/auth/google` | Verifies a Google ID token, returns `{session, email, pro}` |
-| `GET /autofollow/api/license` | Returns `{email, pro}` for a session |
-| `POST /autofollow/api/checkout` | Creates a Paddle transaction, returns `{url}` |
-| `/autofollow/checkout` | Page that opens the Paddle checkout (set as Paddle's default payment link) |
+| `POST /x-autofollow/api/auth/google` | Verifies a Google ID token, returns `{session, email, pro}` |
+| `GET /x-autofollow/api/license` | Returns `{email, pro}` for a session |
+| `POST /x-autofollow/api/checkout` | Creates a Paddle transaction, returns `{url}` |
+| `/x-autofollow/checkout` | Page that opens the Paddle checkout (set as Paddle's default payment link) |
 
 No database. "Is this account Pro?" is answered by asking Paddle for paid transactions
 on customers with that email. No new npm dependencies.
@@ -25,7 +25,7 @@ on customers with that email. No new npm dependencies.
 | `PADDLE_PRODUCT_ID` | `pro_01m7q06c4anxqmchzaa1tfj5re` (sandbox) |
 | `PADDLE_PRICE_ID` | `pri_01m7q07x3z0x0zprtyr9zhbrjx` (sandbox) |
 | `AUTOFOLLOW_GOOGLE_CLIENT_ID` | `1024728485798-5sd4ckok1oaq9gcf7r515hoq3fpeaf8b.apps.googleusercontent.com` (public, same as the extension's `config.js`) |
-| `AUTOFOLLOW_CHECKOUT_URL` | `https://nihaln.com/autofollow/checkout` |
+| `AUTOFOLLOW_CHECKOUT_URL` | `https://nihaln.com/x-autofollow/checkout` |
 | `AUTOFOLLOW_SESSION_SECRET` | Long random string, e.g. `openssl rand -base64 48` |
 
 The portfolio `docker-compose.yml` loads `.env.autofollow` (git-ignored). Copy

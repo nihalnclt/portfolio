@@ -6,7 +6,7 @@ const CONFIG = {
   //   POST /auth/google   body {id_token, nonce}        -> {session, email, pro}
   //   GET  /license       Authorization: Bearer session -> {email, pro}
   //   POST /checkout      Authorization: Bearer session -> {url}  (Paddle checkout URL for this account)
-  API_BASE: 'https://nihaln.com/autofollow/api',
+  API_BASE: 'https://nihaln.com/x-autofollow/api',
 
   // Google OAuth client id (type "Web application") whose authorised redirect URI is
   // https://<extension-id>.chromiumapp.org/

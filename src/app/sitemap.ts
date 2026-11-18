@@ -24,6 +24,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/oppam/privacy",
     "/oppam/terms",
     "/oppam/support",
+    "/x-autofollow",
+    "/x-autofollow/terms",
+    "/x-autofollow/privacy",
+    "/x-autofollow/refund",
   ].map((route) => ({
     url: `${siteConfig.siteUrl}${route}`,
     lastModified: new Date(),
