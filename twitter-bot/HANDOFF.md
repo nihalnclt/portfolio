@@ -114,9 +114,22 @@ Found, not fixed:
    switch `PADDLE_ENV` to production with live IDs and keys, decide on tax-inclusive
    pricing, add refund handling and rate limiting.
 
+## Deployed and hardened, 2026-11-18
+
+- Commit `5ded7bc` is live on nihaln.com (server `suneer@10.199.100.132`,
+  `/home/suneer/apps/portfolio`, `docker compose up -d --build`), running with Paddle
+  sandbox credentials. The full flow passed from the extension: Google sign-in, test-card
+  purchase, licence reports Pro.
+- Written after that deploy, not yet deployed: refund handling (a purchase whose refunds plus
+  chargebacks cover the full amount paid no longer counts as Pro; partial refunds keep Pro)
+  and per-IP rate limits (licence 30, sign-in 10, checkout 5 per minute, answered with 429).
+  The refund rule reads `adjustments_totals.breakdown` and has not been tried against a real
+  refund; whether Paddle counts pending refunds there is unknown.
+- The 400 per day Pro limit cannot be enforced by the server: follows happen in the buyer's
+  own browser and the server never sees them.
+
 ## Open risks the owner has been told about
 
 - Selling a follow-automation tool breaks X's automation rules; buyers' accounts can be locked.
 - The logo contains X's trademark.
 - Paddle reviews products before live selling and may decline this one. Not checked.
-- A refunded purchase currently still counts as Pro.

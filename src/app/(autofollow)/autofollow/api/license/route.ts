@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
-import { hasPro, readSession } from "@/lib/autofollow";
+import { hasPro, rateLimited, readSession } from "@/lib/autofollow";
 
 export const dynamic = "force-dynamic";
 
 // GET with Authorization: Bearer <session> -> {email, pro}
 export async function GET(request: Request) {
+  if (rateLimited(request, "license", 30)) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  }
   const email = readSession(request);
   if (!email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   try {

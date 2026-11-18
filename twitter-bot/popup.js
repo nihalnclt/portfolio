@@ -180,6 +180,8 @@ const ERRORS = {
   not_signed_in: 'Sign in with Google first.',
   google_sign_in_failed: 'Google sign-in did not complete.',
   server_401: 'Your session expired. Sign in again.',
+  server_409: 'This account already has Pro. Press "I have already paid, check again".',
+  server_429: 'Too many requests. Wait a minute and try again.',
 };
 $('price').textContent = CONFIG.PRICE_LABEL;
 $('buy').textContent = `Get Pro for ${CONFIG.PRICE_LABEL}`;

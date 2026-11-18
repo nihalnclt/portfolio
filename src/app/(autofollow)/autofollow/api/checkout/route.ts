@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
-import { createCheckoutUrl, hasPro, readSession } from "@/lib/autofollow";
+import { createCheckoutUrl, hasPro, rateLimited, readSession } from "@/lib/autofollow";
 
 export const dynamic = "force-dynamic";
 
 // POST with Authorization: Bearer <session> -> {url}
 export async function POST(request: Request) {
+  if (rateLimited(request, "checkout", 5)) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  }
   const email = readSession(request);
   if (!email) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   try {

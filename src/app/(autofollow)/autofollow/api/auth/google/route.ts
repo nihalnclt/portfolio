@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
-import { createSession, hasPro, verifyGoogleIdToken } from "@/lib/autofollow";
+import { createSession, hasPro, rateLimited, verifyGoogleIdToken } from "@/lib/autofollow";
 
 export const dynamic = "force-dynamic";
 
 // POST {id_token, nonce} -> {session, email, pro}
 export async function POST(request: Request) {
+  if (rateLimited(request, "auth", 10)) {
+    return NextResponse.json({ error: "rate_limited" }, { status: 429 });
+  }
   try {
     const { id_token, nonce } = await request.json();
     if (typeof id_token !== "string" || typeof nonce !== "string") {

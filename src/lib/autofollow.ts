@@ -74,13 +74,30 @@ async function customerIds(email: string): Promise<string[]> {
   return (r.json.data || []).map((c: { id: string }) => c.id);
 }
 
-/** True if any Paddle customer with this email has a paid transaction for the Pro product. */
+type PaddleTx = {
+  items?: { price?: { product_id?: string } }[];
+  details?: { totals?: { grand_total?: string } };
+  adjustments_totals?: { breakdown?: { refund?: string; chargeback?: string } };
+};
+
+/** True if the whole amount paid has been refunded or charged back. Partial refunds (tax, goodwill) keep Pro. */
+function fullyRefunded(tx: PaddleTx): boolean {
+  const paid = Number(tx.details?.totals?.grand_total || 0);
+  const b = tx.adjustments_totals?.breakdown;
+  const returned = Number(b?.refund || 0) + Number(b?.chargeback || 0);
+  return returned > 0 && returned >= paid;
+}
+
+/** True if any Paddle customer with this email has a paid, not fully refunded transaction for the Pro product. */
 export async function hasPro(email: string): Promise<boolean> {
   const productId = env("PADDLE_PRODUCT_ID");
   for (const id of await customerIds(email)) {
-    const r = await paddle(`/transactions?customer_id=${id}&status=completed,paid&per_page=30`);
+    const r = await paddle(
+      `/transactions?customer_id=${id}&status=completed,paid&per_page=30&include=adjustments_totals`,
+    );
     if (!r.ok) throw new Error(`Paddle transactions lookup failed (${r.status})`);
-    for (const tx of r.json.data || []) {
+    for (const tx of (r.json.data || []) as PaddleTx[]) {
+      if (fullyRefunded(tx)) continue;
       for (const item of tx.items || []) {
         if (item.price?.product_id === productId) return true;
       }
@@ -110,4 +127,35 @@ export async function createCheckoutUrl(email: string): Promise<string> {
   const url = tx.json?.data?.checkout?.url;
   if (!tx.ok || !url) throw new Error(`Paddle transaction create failed (${tx.status})`);
   return url;
+}
+
+// ---------- Rate limiting ----------
+
+// Fixed window, kept in memory. Good enough for one container; it resets on restart and
+// would need a shared store if the app ever runs as several instances.
+const hits = new Map<string, { count: number; resetAt: number }>();
+
+/** Returns true if this caller is over `max` requests per minute for `bucket`. */
+export function rateLimited(request: Request, bucket: string, max: number): boolean {
+  const now = Date.now();
+  // The site sits behind Cloudflare, which sets cf-connecting-ip itself, so a caller cannot fake it.
+  const h = request.headers;
+  const ip =
+    h.get("cf-connecting-ip") ||
+    h.get("x-real-ip") ||
+    (h.get("x-forwarded-for") || "").split(",")[0].trim() ||
+    "unknown";
+  const key = `${bucket}:${ip}`;
+  if (hits.size > 10000) {
+    hits.forEach((v, k) => {
+      if (v.resetAt <= now) hits.delete(k);
+    });
+  }
+  const entry = hits.get(key);
+  if (!entry || entry.resetAt <= now) {
+    hits.set(key, { count: 1, resetAt: now + 60_000 });
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > max;
 }
