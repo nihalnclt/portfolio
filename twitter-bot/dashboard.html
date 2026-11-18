@@ -16,6 +16,9 @@
       }
       .top img { width: 30px; height: 30px; display: block; }
       .top .title { font-size: 20px; font-weight: 800; line-height: 1.2; }
+      .probadge { display: inline-flex; align-items: center; margin-left: 10px; padding: 1px 8px 1px 7px; border: 1px solid #f5c518; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; color: #f5c518; vertical-align: 3px; }
+      .probadge[hidden] { display: none; }
+      .probadge .crown { width: 13px; height: 13px; margin-right: 4px; fill: #f5c518; }
       .top .sub { font-size: 13px; color: var(--muted); }
 
       /* Profile header */
@@ -80,7 +83,7 @@
       <div class="top">
         <img src="icons/icon128.png" alt="" />
         <div>
-          <div class="title">Auto Follow</div>
+          <div class="title">Auto Follow<span id="proBadge" class="probadge" hidden><svg class="crown" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.8 10H4.8L3 8zm2 12h14v1.5H5V20z"/></svg>PRO</span></div>
           <div class="sub" id="sub"></div>
         </div>
       </div>

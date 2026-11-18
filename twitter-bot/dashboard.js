@@ -71,6 +71,7 @@ function activityRow(e) {
 }
 
 function render() {
+  $('proBadge').hidden = !state.account?.pro;
   const unfollow = state.mode === 'unfollow';
   const handle = unfollow ? state.myHandle : state.target;
   const prof = state.profile && handle && state.profile.handle === handle.toLowerCase() ? state.profile : null;
