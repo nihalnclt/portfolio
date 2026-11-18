@@ -128,6 +128,21 @@ Found, not fixed:
 - The 400 per day Pro limit cannot be enforced by the server: follows happen in the buyer's
   own browser and the server never sees them.
 
+## Checked on X and Paddle, 2026-11-18 (later)
+
+- Refund rule proven in the sandbox: after a full refund was approved, the live licence for
+  `autofollow-test@example.com` went from Pro to Free. A pending refund does not count.
+- X selectors checked on the live site by running the extension's page logic by hand (the
+  popup itself cannot be driven by automation): `UserCell`, `-follow` / `-unfollow` buttons,
+  `Follow @handle` / `Following @handle` labels, `icon-verified`, `userFollowIndicator`,
+  `confirmationSheetConfirm`, `AppTabBar_Profile_Link`, `UserName`, the avatar and the
+  follower counts all match. One real follow then unfollow of @Engineering succeeded.
+- Not checked: `icon-lock` and the follow-request path (no protected account was in the
+  lists), the default-avatar check, and the scheduler, alarms and daily counter, which only
+  run inside the extension. Profile posts took about 10 seconds to appear in a visible tab;
+  the activity filter opens profiles in background tabs, where X may load them slower or
+  not at all.
+
 ## Open risks the owner has been told about
 
 - Selling a follow-automation tool breaks X's automation rules; buyers' accounts can be locked.

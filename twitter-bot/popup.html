@@ -122,7 +122,12 @@
       .center { text-align: center; padding-top: 8px; }
       .acct { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; font-size: 14px; }
       #acctEmail { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .proactive { padding: 12px; border: 1px solid var(--ok); border-radius: 12px; text-align: center; font-weight: 700; color: var(--ok); }
+      .proactive { padding: 12px; border: 1px solid #f5c518; border-radius: 12px; text-align: center; font-weight: 700; color: #f5c518; }
+      .probadge { display: inline-flex; align-items: center; margin-left: 8px; padding: 1px 7px 1px 6px; border: 1px solid #f5c518; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; color: #f5c518; vertical-align: 2px; }
+      .probadge[hidden] { display: none; }
+      .probadge .crown { width: 12px; height: 12px; margin-right: 4px; }
+      .crown { width: 15px; height: 15px; fill: #f5c518; vertical-align: -2px; margin-right: 6px; }
+      .proactive .crown { width: 18px; height: 18px; vertical-align: -3px; }
       #acctMsg { color: var(--bad); }
       #acctMsg:empty { display: none; }
       #capNote { color: var(--accent); }
@@ -160,7 +165,7 @@
     <header>
       <img src="icons/icon128.png" alt="" />
       <div>
-        <div class="title">Auto Follow</div>
+        <div class="title">Auto Follow<span id="proBadge" class="probadge" hidden><svg class="crown" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.8 10H4.8L3 8zm2 12h14v1.5H5V20z"/></svg>PRO</span></div>
         <div class="sub"><span class="dot"></span><span id="status"></span></div>
       </div>
     </header>
@@ -169,7 +174,7 @@
       <button data-pane="follow" class="on">Follow</button>
       <button data-pane="unfollow">Unfollow</button>
       <button data-pane="settings">Settings</button>
-      <button data-pane="pro">Pro</button>
+      <button data-pane="pro"><svg class="crown" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.8 10H4.8L3 8zm2 12h14v1.5H5V20z"/></svg>Pro</button>
     </div>
 
     <div class="pane on" id="pane-follow">
@@ -261,7 +266,7 @@
             <button class="btn primary block large" id="buy">Get Pro</button>
             <button class="btn link block" id="refresh">I have already paid, check again</button>
           </div>
-          <div id="isPro" class="proactive" hidden>Pro is active on this account</div>
+          <div id="isPro" class="proactive" hidden><svg class="crown" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 5l4.5 7L21 8l-1.8 10H4.8L3 8zm2 12h14v1.5H5V20z"/></svg>Pro is active on this account</div>
         </div>
         <div id="acctMsg" class="note center"></div>
       </div>

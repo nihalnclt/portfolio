@@ -80,6 +80,7 @@ function render(state, fillInputs) {
   const acct = state.account;
   $('acctOut').hidden = !!acct;
   $('acctIn').hidden = !acct;
+  $('proBadge').hidden = !acct?.pro;
   if (acct) {
     $('acctEmail').textContent = acct.email;
     $('isFree').hidden = acct.pro;
